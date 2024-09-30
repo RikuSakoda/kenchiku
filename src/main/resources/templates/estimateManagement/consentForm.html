@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>BuildManager Dashboard &mdash; SE-PROJECT</title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" href="../../../develop/volumes/web/static/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="../../../develop/volumes/web/static/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css">
+
+<!-- Template CSS -->
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+
+<!-- Bootstrap Icons CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
+<script src="https://jsuites.net/v4/jsuites.js"></script>
+<link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css">
+<link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css">
+
+</head>
+
+<style>
+   #pdf-content {
+        padding: 20px;
+        box-sizing: border-box;
+        margin: 0 auto; 
+        overflow: hidden;
+    }
+    .table {
+        border: 1px solid #ddd; 
+        border-collapse: collapse; 
+        width: 100%; 
+    }
+    .table th, .table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    .table th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>見積管理 TODO:オーナー金額の合計計算・画面幅の変更がpdfにした際に適用される状態</h1>
+          </div>
+          <div class="section-body">
+           <a th:href="@{/estimate/detail(id=${matterId})}" class="btn btn-light ml-2">詳細へ戻る</a>
+            <button id="generate-pdf" class="btn btn-primary">PDFに変換</button>
+            <div class="row">
+              <div id="pdf-content" class="col-12">
+                <div class="card">
+                  <div class="card-body" style="font-family: serif;">
+                  <br />
+                    <h2 class="text-center">原状回復工事費用承諾書</h2>
+                    <div style="display: flex; justify-content: space-between; font-size: 14pt;">
+                      <th:block th:each="matter : ${matter}">
+                        <div class="text-left" style="flex: 1; text-align: left; padding-left: 40px;">
+                          <br />
+                            <span th:text="${matter.tenant.lastName} + ${matter.tenant.firstName}"></span>
+                              <label>様</label><br />
+                            <label>物件名：</label><span th:text="${matter.propertyName}"></span><br />
+                            <label>所在地：</label><span th:text="${matter.propertyAddress} + ${matter.propertyBuildingName}"></span><br />
+                            <br />
+                            
+                            ＜間取り＞<span th:each="floor : ${floor}" th:if="${floor.id == matter.propertyId}">
+                            <span th:each="arrangement, iterStat : ${floor.arrangement}">
+                              <span th:text="${floor.arrangement}"></span> &emsp;
+                           </span>
+                                
+                            家賃:<span th:each="rent, iterStat : ${floor.rent}">
+                              <span th:text="${rent}"></span>円 &emsp;
+                              
+                            敷金:<span th:each="securityDeposit, iterStat : ${floor.securityDeposit}">
+                              <span th:text="${securityDeposit}"></span>円 <br /> <br />
+                            下記の通り判断しましたので、御検討の上御査収下さい。
+                          </span>
+                          </span>
+                          </span>
+                        </div>
+
+                        <div class="text-center" style="flex: 1; text-align: center;">
+                          <br /> 
+                          <span>
+                            立会担当：<span th:text="${matter.visitName}"><br /></span>&emsp;
+                          </span>
+                        </div>
+
+                        <div class="right" style="flex: 0.8; text-align: left;">
+                          <p style="line-height: 1.8; letter-spacing: 3px;">
+                           <span th:text="${formattedDate} + ${formattedTime}"></span><br />
+                          家主代理の住所<br />
+                          家主代理：株式会社〇〇<br />
+                          TEL: &emsp;&emsp;xxx-xxx-xxxx<br />
+                          FAX: &emsp;&emsp;xxx-xxx-xxxx<br />
+                          E-mail: &emsp;xxxxx@xxxxxx.xx.jp</p>
+                        </div>
+                      </th:block>
+                    </div>
+
+                    <div class="text-center">
+                      <h3 style="display: inline-block; position: relative; padding-bottom: 10px;">
+                          <th:block th:each="estimate : ${estimate}">
+                              原状回復費&emsp;&emsp;<span th:text="${estimate.approvalTotal}"></span>&nbsp;―
+                          </th:block>
+                          <span style="position: relative; display: block; height: 10px; width: 100%; border-bottom: 3px double black; box-sizing: border-box;"></span>
+                      </h3>
+
+                      <br /><br />
+
+                      <table class="table" id="mst_estimate_item">
+                        <thead>
+                          <tr>
+                            <th class="text-center">No.</th>
+                            <th>箇所・項目</th>
+                            <th>単位</th>
+                            <th>数量</th>
+                            <th>単価</th>
+                            <th>リフォーム代金</th>
+                            <th>入居者負担率（％）</th>
+                            <th>金額</th>
+                            <th>オーナー負担率（％）</th>
+                            <th>金額</th>
+                            <th>備考</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                          <th:block th:each="item, iterStat : ${estimateItem}" th:with="reformPrice=${item.approvalUnitPrice * item.volume}">
+                            <tr>
+                              <td th:text="${iterStat.index + 1}"></td>
+                              <td><span th:text="${item.constructionClassificationName}"></span></td>
+                              <td><span th:text="${item.unit}"></span></td>
+                              <td><span th:text="${item.volume}"></span></td>
+                              <td><span th:text="${item.approvalUnitPrice}"></span></td>
+                              <td><span th:text="${reformPrice}"></span></td>
+                              <td><span th:text="${item.tenantBurdenRatio}"></span>%</td>
+                              <td><span th:text="${item.tenantAmount}"></span></td>
+                              <td><span th:text="100 - ${item.tenantBurdenRatio}"></span>%</td>
+                              <td><span th:text="${reformPrice - item.tenantAmount}"></span></td>
+                              <td><span th:text="${item.note}"></span></td>
+                            </tr>
+                          </th:block>
+                          <th:block th:each="estimate : ${estimate}">
+                            <tr>
+                              <td></td>
+                              <td colspan="5" class="text-left">小計</td>
+                              <td colspan="2" class="text-right">
+                                <span th:text="${estimate.approvalSubtotal}"></span>
+                              </td>
+                              <td colspan="2" class="text-right">
+                                <th:block th:each="item : ${estimateItem}" th:with="ownerPrice=${item.approvalUnitPrice * item.volume - item.tenantAmount}">
+                                  <span th:with="ownerSub = ${ownerPrice}"></span>
+                                </th:block>
+                                <span th:text="${ownerSub}"></span>
+                              </td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <td></td>
+                              <td colspan="5" class="text-left">消費税</td>
+                              <td colspan="2" class="text-right"><span th:text="${estimate.approvalConsumptionTax}"></span></td>
+                              <td colspan="2" class="text-right">
+                                <th:block th:each="item : ${estimateItem}" th:with="ownerPrice=${item.approvalUnitPrice * item.volume - item.tenantAmount}">
+                                  <span th:with="ownerTax = ${ownerPrice * 0.1}"></span>
+                                </th:block>
+                                <span th:text="${ownerTax}"></span>
+                              </td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <td></td>
+                              <td colspan="5" class="text-left">合計</td>
+                              <td colspan="2" class="text-right">
+                                <span th:text="${estimate.approvalTotal}"></span>
+                              </td>
+                              <td colspan="2" class="text-right">
+                                <span th:with="ownersum = 0"></span>
+                                <th:block th:each="item : ${estimateItem}" th:with="ownerPrice=${item.approvalUnitPrice * item.volume - item.tenantAmount}" >
+                                  <span th:with="ownersum = ${ownerPrice * 0.1}"></span>
+                                </th:block>
+                                <span th:text="${ownersum}"></span>
+                              </td>
+                              <td></td>
+                            </tr>
+                          </th:block>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div>
+                      <p style="font-size: 12pt;">退去に伴う原状回復修繕箇所の点検を実施し、修繕箇所及び費用を確認した上了解致しました。<br />                                      
+                          &emsp;&emsp;&emsp;&emsp;尚、隠れたる瑕疵が発生した場合には、後日協議の上解決にあたるものとする。</p>                                
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                      <div style="display: flex; align-items: center;">
+                        <p style="margin: 0; padding-right: 20px;">令和x年x月x日</p>&emsp;&emsp;
+
+                        <div style="text-align: center;">
+                          <small>フリガナ</small><br />
+                          <p style="margin: 0;">氏名</p>
+                          <br />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <footer class="main-footer">
+      <div class="footer-left">Copyright &copy; se-project 2024</div>
+      <div class="footer-right">2.3.0</div>
+    </footer>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraries -->
+  <script src="../../assets/js/admin/jquery.dataTables.custom.js"></script>
+  <script src="../../../develop/volumes/web/static/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../../develop/volumes/web/static/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js"></script>
+  <script src="../../../develop/volumes/web/static/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+
+  <!-- jsPDF and html2canvas CDN links -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+
+  <!-- Template JS File -->
+  <script src="../../assets/js/scripts.js"></script>
+  <script src="../../assets/js/custom.js"></script>
+
+  <!-- Page Specific JS File -->
+  <script src="../../assets/js/page/modules-datatables.js"></script>
+
+<script>
+    document.getElementById('generate-pdf').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const element = document.getElementById('pdf-content');
+
+        html2canvas(element, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('l', 'mm', 'a4'); // A4用紙、横向き
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width * 0.75;
+            const imgHeight = canvas.height * 0.75;
+
+            const widthRatio = pdfWidth / imgWidth;
+            const heightRatio = pdfHeight / imgHeight;
+            const ratio = Math.min(widthRatio, heightRatio);
+
+            const imgWidthAdjusted = imgWidth * ratio;
+            const imgHeightAdjusted = imgHeight * ratio;
+
+            const xOffset = (pdfWidth - imgWidthAdjusted) / 1;
+            const yOffset = 0;
+
+            pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidthAdjusted, imgHeightAdjusted);
+            pdf.save('document.pdf');
+        });
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const requiredRows = 10; // 固定したい行数
+    const tbody = document.getElementById('tbody');
+
+    // 現在の行数を取得
+    const currentRows = tbody.getElementsByTagName('tr').length;
+
+    // データ行と集計行の間に挿入するための位置を特定
+    const insertPosition = currentRows - 3; // 集計行の前、つまり現在の行数から3行引いた位置
+
+    // 不足している行数を計算
+    const missingRows = requiredRows - insertPosition;
+
+    // 不足している行数を追加
+    for (let i = 0; i < missingRows; i++) {
+        const tr = document.createElement('tr');
+
+        // 各列を作成
+        for (let j = 0; j < 11; j++) { // 11列のテーブル
+            const td = document.createElement('td');
+            tr.appendChild(td);
+        }
+
+        tbody.insertBefore(tr, tbody.children[insertPosition + i]);
+    }
+});
+</script>
+
+
+
+</body>
+</html>

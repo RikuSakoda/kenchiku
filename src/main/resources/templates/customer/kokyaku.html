@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title data-th-text="#{title} + #{title.customer}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- DataTables CSS -->
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+<link rel="stylesheet" th:href="@{/assets/css/settings.css}">
+
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/jqvmap/dist/jqvmap.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/summernote/dist/summernote-bs4.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.carousel.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css}">
+</head>
+
+<body>
+
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>顧客管理</h1>
+          </div>
+
+          <div class="section-body">
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button"
+                id="customerSearchButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">顧客検索</button>
+              <div class="dropdown-menu w-100 p-4 rounded border border-dark"
+                aria-labelledby="customerSearchButton">
+                <form th:action="@{/customer/search}" th:object="${mstCustomer}" method="get">
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="customerType">個人・法人区分</label> <select id="customerType"
+                        class="form-control" th:field="*{cust_kind}">
+                        <option value=""></option>
+                        <option value="個人">個人</option>
+                        <option value="法人">法人</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                      <label for="corporationName">法人名</label> <input type="text"
+                        class="form-control" th:field="*{corpName}" id="corporationName">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="corporationNameKana">法人名カナ</label> <input type="text"
+                        class="form-control" th:field="*{corpKana}" id="corporationNameKana">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="department">部署</label> <input type="text" class="form-control"
+                        th:field="*{department}" id="customerName">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="customerName">顧客名</label> <input type="text" class="form-control"
+                        th:field="*{lName}" id="customerName">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="customerNameKana">顧客名カナ</label> <input type="text"
+                        class="form-control" th:field="*{lNameKana}" id="customerNameKana">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="zip">郵便番号</label> <input type="text" class="form-control"
+                        th:field="*{zip}" id="zip">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="prefecture">都道府県</label> <select class="form-control"
+                        th:field="*{prefectures}">
+                        <option value=""></option>
+                        <th:block th:each="pref : ${prefectures}">
+                          <option th:value="${pref.codeName}"><span
+                              th:text="${pref.codeName}"></span>
+                          </option>
+                        </th:block>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="address1">住所</label> <input type="text" class="form-control"
+                        th:field="*{address1}" id="address1">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="address2">建物名</label> <input type="text" class="form-control"
+                        th:field="*{address2}" id="address2">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="tel">電話番号</label> <input type="text" class="form-control"
+                        th:field="*{tel}" id="tel">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="mobile">携帯番号</label> <input type="text" class="form-control"
+                        th:field="*{mobile}" id="mobile">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="mail">メールアドレス</label> <input type="email" class="form-control"
+                        th:field="*{mail}" id="mail">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="status">ステータス</label> <select id="status" class="form-control"
+                        th:field="*{status}">
+                        <option value=""></option>
+                        <option value="active">有効</option>
+                        <option value="inactive">無効</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="dateFrom">登録日</label> <input type="date" class="form-control"
+                        th:field="*{createdAt1}" id="dateFrom">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="updateDate">更新日</label> <input type="date" class="form-control"
+                        th:field="*{updatedAt1}" id="updateDate">
+                    </div>
+                    <div class="form-group col-md-2 align-self-end">
+                      <button type="submit" class="btn btn-primary">検索</button>
+                      <button type="reset" class="btn btn-secondary">リセット</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- <h2 class="section-title">DataTables</h2>
+            <p class="section-lead">
+              We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>.
+            </p> -->
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <a href="customer/register"
+                      class="btn btn-primary btn-lg w-25 ml-1 btn-square mt-2">新規作成</a>
+                    
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-striped" id="kokyaku-table">
+                        <thead>
+                          <tr>
+                            <th class="text-center"></th>
+                            <th>ステータス</th>
+                            <th>顧客名<br />顧客名カナ
+                            </th>
+                            <th>法人名<br />法人名カナ
+                            </th>
+                            <th>郵便番号<br />住所、建物名
+                            </th>
+                            <th>メールアドレス</th>
+                            <th>電話番号<br />携帯番号
+                            </th>
+                            <th>登録日<br />更新日
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                          <th:block th:each="customer: ${customer}">
+                            <tr>
+                              <td><a th:href="@{/customer/update(id=${customer.id})}"
+                                class="btn btn-primary">詳細</a></td>
+                              <td>
+                                <div class="form-group mb-0">
+                                  <th:block th:if="${customer.status} eq ${statusTrue}">
+                                    <label class="custom-switch mt-2 pl-0"> <input
+                                      type="checkbox" name="custom-switch-checkbox"
+                                      th:attr="data-customer-id=${customer.id}"
+                                      class="custom-switch-input" checked> <span
+                                      class="custom-switch-indicator"></span> <span
+                                      class="custom-switch-description">有効</span>
+                                    </label>
+                                  </th:block>
+                                  <th:block th:if="${customer.status} ne ${statusTrue}">
+                                    <label class="custom-switch mt-2 pl-0"> <input
+                                      type="checkbox" name="custom-switch-checkbox"
+                                      th:attr="data-customer-id=${customer.id}"
+                                      class="custom-switch-input"> <span
+                                      class="custom-switch-indicator"></span> <span
+                                      class="custom-switch-description">無効</span>
+                                    </label>
+                                  </th:block>
+
+                                </div>
+                              </td>
+                              <td><span th:text="${customer.lName} + ${customer.fName}"></span><br />
+                                <span th:text="${customer.lNameKana} + ${customer.fNameKana}"></span></td>
+                              <td><span th:text="${customer.CorpName}"></span><br /> <span
+                                th:text="${customer.CorpKana}"></span></td>
+                              <td><span th:text="${customer.Zip}"></span><br /> <span
+                                th:text="${customer.prefectures}"></span> <span
+                                th:text="${customer.Address1}"></span> <span
+                                th:text="${customer.Address2}"></span></td>
+                              <td><span th:text="${customer.Mail}"></span></td>
+                              <td><span th:text="${customer.Tel}"></span><br /> <span
+                                th:text="${customer.Mobile}"></span></td>
+
+
+                              <td>
+                                <div>[[${#temporals.format(customer.createdAt, 'yyyy-MM-dd
+                                  HH:mm')}]]</div>
+                                <div>[[${#temporals.format(customer.updatedAt, 'yyyy-MM-dd
+                                  HH:mm')}]]</div>
+                              </td>
+                            </tr>
+                          </th:block>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">Copyright &copy; se-project 2024</div>
+        <div class="footer-right">2.3.0</div>
+      </footer>
+    </div>
+  </div>
+
+  <div id="updatemodal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">変更が完了しました</h5>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+
+
+
+  <script th:inline="javascript">
+			var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+			var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+		</script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+
+  <script th:src="@{/js/kokyaku.js}"></script>
+
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+
+</body>
+</html>

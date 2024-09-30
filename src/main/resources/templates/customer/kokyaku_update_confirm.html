@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<title data-th-text="#{title} + #{title.customer}+#{title.update}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>顧客管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">顧客変更 確認</h2>
+            <p class="section-lead">
+               この情報で変更します。よろしいですか？
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form method = "post" th:object="${mstCustomerForm}" th:action="@{/customer/save-update}">
+                  <div class="card">
+                    <div class="card-body">
+                    
+                     <div class="form-group">
+                      <h6>個人・法人区分<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <h5><span th:text="${mstCustomerForm.cust_kind}"></span></h5> 
+                     <input type="hidden" th:field="*{cust_kind}" th:value="${mstCustomerForm.cust_kind}">
+                    </div>
+                    
+                      <div class="form-group p-1">
+                        <h6>法人名</h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.corpName}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>法人名カナ</h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.corpKana}" readonly>
+                      </div>
+                      
+                      <div class="form-group w-5 p-1">
+                        <h6>部署</h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.department}" readonly>
+                      </div>
+                      
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>姓<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.lName}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>名<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control w-50"
+                          th:value="${mstCustomerForm.fName}" readonly>
+                      </div>
+                      
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>姓カナ<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.lNameKana}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>名カナ<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control w-50"
+                          th:value="${mstCustomerForm.fNameKana}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>郵便番号</h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.zip}" readonly>
+                      </div>
+                      
+                      <div class="form-group">
+                      <h6>都道府県<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <h5><span th:text="${mstCustomerForm.prefectures}"></span></h5> 
+                        <input type="hidden" th:field="*{prefectures}" th:value="${mstCustomerForm.prefectures}">
+                    </div>
+
+                    
+                    <div class="form-group p-1">
+                        <h6>住所</h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.address1}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>建物名</h6> <input type="text" class="form-control"
+                          th:value="${mstCustomerForm.address2}" readonly>
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>電話番号</h6> <input type="tel" class="form-control"
+                          th:value="${mstCustomerForm.tel}" readonly>
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>携帯番号</h6> <input type="tel" class="form-control"
+                          th:value="${mstCustomerForm.mobile}" readonly>
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>メールアドレス</h6> <input type="email" class="form-control"
+                          th:value="${mstCustomerForm.mail}" readonly>
+                      </div>
+                      
+                      <div>
+                        <h6>退去立会後メール<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                         <p th:if="${mstCustomerForm.mailFlg == true}">メールを送信する</p>
+                         <p th:if="${mstCustomerForm.mailFlg == false}">送信しない</p>
+                  </div>
+                  <div class="form-group">
+                      <label class="custom-switch mt-2 pl-0">
+                          
+                          <input type="checkbox" class="custom-checkbox" >
+                          <span class="custom-switch-description">同じ内容をオーナー情報にも登録する</span>
+                      </label>
+                      </div>
+
+                      <input type="hidden" th:field="*{id}" th:value="${mstCustomerForm.id}" />
+                      <input type="hidden" th:field="*{corpName}" th:value="${mstCustomerForm.corpName}" />
+                      <input type="hidden" th:field="*{corpKana}" th:value="${mstCustomerForm.corpKana}" />
+                      <input type="hidden" th:field="*{department}" th:value="${mstCustomerForm.department}" />
+                      <input type="hidden" th:field="*{lName}" th:value="${mstCustomerForm.lName}" />
+                      <input type="hidden" th:field="*{fName}" th:value="${mstCustomerForm.fName}" />
+                      <input type="hidden" th:field="*{lNameKana}" th:value="${mstCustomerForm.lNameKana}" />
+                      <input type="hidden" th:field="*{fNameKana}" th:value="${mstCustomerForm.fNameKana}" />
+                      <input type="hidden" th:field="*{tel}" th:value="${mstCustomerForm.tel}" />
+                      <input type="hidden" th:field="*{mobile}" th:value="${mstCustomerForm.mobile}" />
+                      <input type="hidden" th:field="*{mail}" th:value="${mstCustomerForm.mail}" />
+                      <input type="hidden"  th:field="*{status}" th:value="${mstCustomerForm.status}" />
+                      <input type="hidden" th:field="*{transactionToken}" th:value="${mstCustomerForm.transactionToken}" />
+                      <input type="hidden" th:field="*{zip}" th:value="${mstCustomerForm.zip}" />
+                      <input type="hidden" th:field="*{address1}" th:value="${mstCustomerForm.address1}" />
+                      <input type="hidden" th:field="*{address2}" th:value="${mstCustomerForm.address2}" />
+                      <input type="hidden" th:field="*{createdAt}" th:alue="${mstCustomerForm.createdAt}">
+
+                    </div>
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a href="javascript:history.back();" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                      <button type="submit" class="btn btn-success btn-lg">変更</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+
+</body>
+</html>

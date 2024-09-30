@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<title data-th-text="#{title} + #{title.checkItem}"></title>
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+<link rel="stylesheet" th:href="@{/assets/css/settings.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>チェック項目管理</h1>
+          </div>
+
+          <div class="section-body">
+            <!-- <h2 class="section-title">DataTables</h2>
+            <p class="section-lead">
+              We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>.
+            </p> -->
+
+            <!-- 検索フォームの追加 -->
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="checkSearchButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">チェック項目検索</button>
+              <div class="dropdown-menu w-100 p-4 rounded border border-dark"
+                aria-labelledby="checkSearchButton">
+                <form th:action="@{/check/search}" th:object="${mstCheckForm}" method="get">
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="CheckDetail">修繕箇所チェック項目</label> <input type="text"
+                        class="form-control" th:field="*{checkDetail}" id="CheckDetail">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="status">ステータス</label> <select id="status" class="form-control"
+                        th:field="*{status}">
+                        <option value=""></option>
+                        <option value="active">有効</option>
+                        <option value="inactive">無効</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="dateFrom">登録日</label> <input type="date" class="form-control"
+                        th:field="*{createdAt1}" id="dateFrom">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="updateDate">更新日</label> <input type="date" class="form-control"
+                        th:field="*{updatedAt1}" id="updateDate">
+                    </div>
+                    <div class="form-group col-md-2 align-self-end">
+                      <button type="submit" class="btn btn-primary">検索</button>
+                      <button type="reset" class="btn btn-secondary">リセット</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- 検索フォームの追加終了 -->
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table table-bordered pt-3 pb-4 pl-4">
+                      <label class="">■リフォーム・修繕箇所チェック項目登録</label><br />
+                      <div class="col d-flex">
+
+                        <input type="text" class="form-control form-control-lg w-50 float-left"
+                          id="check_save" th:value="${mstCheckForm.checkDetail}" />
+                        <button type="submit" id="save" class="btn btn-success btn-lg">新規登録</button>
+                        <!-- Main Content -->
+                                                <form method="post" th:action="@{/FileUploadController/upload}" class="upload-form">
+                          <button type="button" class="btn btn-primary btn-lg fas fa-upload btn-icon-center"
+                            id="uploadButton" title="アップロード"></button>
+                        </form>
+                        
+                        <a th:href="@{/check/poi}"
+                          class="btn btn-primary btn-lg btn-download btn-icon-center" title="ダウンロード">
+                          <i class="fas fa-download"></i>
+                        </a>
+                        </div>
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-striped" id="check-table">
+                          <thead>
+                            <tr>
+                              <th>ステータス</th>
+                              <th>リフォーム・修繕箇所チェック項目</th>
+                              <th>登録日<br />更新日
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody">
+                            <th:block th:each="check : ${checks}">
+                              <tr>
+                                <td>
+                                  <div class="form-group mb-0">
+                                    <th:block th:if="${check.status} eq ${statusTrue}">
+                                      <label class="custom-switch mt-2 pl-0"> <input
+                                        type="checkbox" name="custom-switch-checkbox"
+                                        th:attr="data-check-id=${check.id}"
+                                        class="custom-switch-input" checked> <span
+                                        class="custom-switch-indicator"></span> <span
+                                        class="custom-switch-description">有効</span>
+                                      </label>
+                                    </th:block>
+                                    <th:block th:if="${check.status} ne ${statusTrue}">
+                                      <label class="custom-switch mt-2 pl-0"> <input
+                                        type="checkbox" name="custom-switch-checkbox"
+                                        th:attr="data-check-id=${check.id}"
+                                        class="custom-switch-input"> <span
+                                        class="custom-switch-indicator"></span> <span
+                                        class="custom-switch-description">無効</span>
+                                      </label>
+                                    </th:block>
+                                  </div>
+                                </td>
+                                <td class=""><input th:id="${check.id}" type="text"
+                                  class="form-control form-control-lg w-75 float-left"
+                                  name="check_update" required autofocus
+                                  th:value="${check.checkDetail}" />
+                                  <button type="button" th:value="${check.id}" id="update"
+                                    class="btn btn-primary btn-lg ml-1 update">変更</button></td>
+                                <td>
+                                  <div>[[${#temporals.format(check.createdAt, 'yyyy-MM-dd
+                                    HH:mm:ss')}]]</div>
+                                  <div>[[${#temporals.format(check.updatedAt, 'yyyy-MM-dd
+                                    HH:mm:ss')}]]</div>
+                                </td>
+                              </tr>
+                            </th:block>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <div class="insert" th:insert="~{common/register_end :: register_end}"></div>
+  <div class="insert" th:insert="~{common/update_end :: update_end}"></div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+
+  <script th:inline="javascript">
+			var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+			var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+		</script>
+
+  <script th:src="@{/js/check/check.js}"></script>
+  <script th:src="@{/js/search/search.js}"></script>
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+</body>
+</html>

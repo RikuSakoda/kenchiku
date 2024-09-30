@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport" />
+<title data-th-text="#{title} + #{title.case} + #{title.register}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous" />
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/css/modal_window.css}" />
+<!-- Template CSS -->
+<link rel="stylesheet" href="../../assets/css/style.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>案件管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">案件新規登録</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/case/register}" th:object="${mstCase}" method="post" novalidate>
+                  <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <h6>
+                          顧客名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <select class="form-control w-50" th:field="*{customerId}">
+                          <th:block th:each="cus : ${customer}">
+                            <option th:value="${cus.id}"><span th:text="${cus.corpName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+                      <script type="text/javascript">
+              function openWindow(url,name) {
+                 window.open(url, name, 'width=800,height=600');
+              }
+            </script>
+                      <div class="form-group">
+                        <h6>
+                          物件名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" id="propertyName" class="form-control w-75 float-left"
+                          th:field="*{propertyName}" th:classappend="${#fields.hasErrors('propertyName')} ? 'is-invalid'" /> 
+                        <input type="hidden" th:field="*{propertyId}" id="propertyId">
+                          <button type="button" id="find_button" class="btn btn-primary mt-1 ml-1">物件検索<span
+                          class="glyphicon glyphicon-new-window" aria-hidden="true"></span></button>
+                          <small class="invalid-feedback" th:if="${#fields.hasErrors('propertyName')}" th:errors="*{propertyName}"></small>
+                      </div>
+                      <input type="hidden" th:field="*{propertyAddress}" id="propertyAddress">
+                      <input type="hidden" th:field="*{propertyBuildingName}" id="propertyBuildingName">
+                      <div class="form-group">
+                        <h6>
+                          種別<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <select class="form-control w-50" th:field="*{taskSubstance}">
+                          <th:block th:each="case : ${caseKind}">
+                            <option th:value="${case.codeName}">
+                                <span th:text="${case.codeName}"></span></option>
+                          </th:block>
+                          
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          案件名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{matterName}" th:classappend="${#fields.hasErrors('matterName')} ? 'is-invalid'" />
+                         <small class="invalid-feedback" th:if="${#fields.hasErrors('matterName')}" th:errors="*{matterName}"></small>
+                      </div>
+                       
+                      
+                      
+                      <div class="form-group">
+                        <h6>訪問予定日時</h6>
+                        <input type="datetime-local" class="form-control"
+                          th:field="*{scheduledVisitDatetime}" th:classappend="${#fields.hasErrors('scheduledVisitDatetime') || #fields.hasErrors('leavingValid')} ? 'is-invalid'" /> 
+                          <small class="invalid-feedback" th:if="${#fields.hasErrors('leavingValid')}" th:errors="*{leavingValid}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>訪問担当者</h6>
+                        <select class="form-control w-50" th:field="*{visitId}" th:classappend="${#fields.hasErrors('visitValid')} ? 'is-invalid'">
+                          <option value=""><span>未選択</span></option>
+                          <th:block th:each="visit : ${visitUser}">
+                            <option th:value="${visit.id}"><span
+                                th:text="${visit.lName} + ${visit.fName}"></span></option>
+                          </th:block>
+                        </select> <small id="" class="form-text text-muted"> </small>
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('visitValid')}" th:errors="*{visitValid}"></small>
+                      </div>
+
+                    
+                      <div class="form-group">
+                        <h6>賃貸契約日</h6>
+                        <input type="datetime-local" class="form-control"
+                          th:field="*{rentalContractDate}" /> <small id=""
+                          class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>賃貸契約終了日</h6>
+                        <input type="datetime-local" class="form-control"
+                          th:field="*{rentalContractEndDate}" /> <small id=""
+                          class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>
+                          入居者姓
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.lastName}"　th:classappend="${#fields.hasErrors('mstTenantForm.lastName')} ? 'is-invalid'"  />
+                         <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.lastName')}" th:errors="*{mstTenantForm.lastName}"></small>
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者名
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{mstTenantForm.firstName}"　th:classappend="${#fields.hasErrors('mstTenantForm.firstName')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.firstName')}" th:errors="*{mstTenantForm.firstName}"></small>
+                      </div>
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>
+                          入居者姓カナ
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.lastNameKana}"　th:classappend="${#fields.hasErrors('mstTenantForm.lastNameKana')} ? 'is-invalid'"  />
+                         <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.lastNameKana')}" th:errors="*{mstTenantForm.lastNameKana}"></small>
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者名カナ
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{mstTenantForm.firstNameKana}"　th:classappend="${#fields.hasErrors('mstTenantForm.firstNameKana')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.firstNameKana')}" th:errors="*{mstTenantForm.firstNameKana}"></small>
+                      </div>
+                      
+                      
+                     
+                      
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者市外局番
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{mstTenantForm.areaCode}"　th:classappend="${#fields.hasErrors('mstTenantForm.areaCode')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.areaCode')}" th:errors="*{mstTenantForm.areaCode}"></small>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者市内局番
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{mstTenantForm.cityCode}"　th:classappend="${#fields.hasErrors('mstTenantForm.cityCode')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.cityCode')}" th:errors="*{mstTenantForm.cityCode}"></small>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者電話番号
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{mstTenantForm.telephoneNumber}"　th:classappend="${#fields.hasErrors('mstTenantForm.telephoneNumber')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.telephoneNumber')}" th:errors="*{mstTenantForm.telephoneNumber}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>入居者転居先郵便番号</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.postCode}" th:classappend="${#fields.hasErrors('mstTenantForm.postCode')} ? 'is-invalid'"  /> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.postCode')}" th:errors="*{mstTenantForm.postCode}"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          入居者転居先都道府県
+                        </h6>
+                        <select class="form-control w-50" th:field="*{mstTenantForm.prefectures}">
+                          <option value=""><span>未選択</span></option>
+                          <th:block th:each="pref : ${prefectures}">
+                            <option th:value="${pref.codeName}"><span
+                                th:text="${pref.codeName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>入居者転居先住所</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.address}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>入居者転居先建物名</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.buildingName}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>入居者銀行名</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.bankName}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者銀行支店名</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.bankBranchName}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者銀行口座番号</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.bankAccountNumber}" th:classappend="${#fields.hasErrors('mstTenantForm.bankAccountNumber')} ? 'is-invalid'"  /> <small
+                          id="" class="form-text text-muted" th:if="${#fields.hasErrors('mstTenantForm.bankAccountNumber')}" th:errors="*{mstTenantForm.bankAccountNumber}"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者銀行口座名義</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.bankAccountName}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者銀行口座名義カナ</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.bankAccountNameKana}" th:classappend="${#fields.hasErrors('mstTenantForm.bankAccountNameKana')} ? 'is-invalid'"  />
+                        <small id="" class="invalid-feedback" th:if="${#fields.hasErrors('mstTenantForm.bankAccountNameKana')}" th:errors="*{mstTenantForm.bankAccountNameKana}"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>シリンダー番号</h6>
+                        <input type="text" class="form-control" th:field="*{mstTenantForm.cylinderNumber}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>備考</h6>
+                        <textarea class="form-control" style="height: 100px" th:field="*{mstTenantForm.note}"></textarea>
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      
+                    
+                      
+                      
+                      
+                    </div>
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <button type="button" id="case_back"  class="btn btn-primary select">戻る</button>
+                      <button type="submit" class="btn btn-success btn-lg">確認</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">Copyright &copy; se-project 2024</div>
+        <div class="footer-right">2.3.0</div>
+      </footer>
+    </div>
+  </div>
+  
+  <!-- モーダルウィンドウ -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h3 >物件検索</h3>
+      <table class="table table-striped"  id="owner-table">
+        <thead>
+          <tr>
+            <th class="text-center">
+            </th>
+            <th>物件名</th>
+            <th>郵便番号<br />住所、建物名</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+         <th:block th:each="floor : ${bukken}">
+                          <tr>
+                            <td>
+                              <button class="btn btn-primary select"  th:value="${floor.id}">選択</button>
+                              
+                            </td>
+                            <td>
+                              <span th:text="${floor.floorName}" id="floorName"></span>
+                            </td>
+                            <td>
+                              <span th:text="${floor.postCode}"></span><br />
+                              <span th:text="${floor.address}" id="address"></span><br />
+                              <span th:text="${floor.buildingName}" id="buildingName"></span>
+                              
+                            </td>
+                          </tr>
+                        </th:block>
+        </tbody>
+      </table>
+      <button type="button" id="cancel_button"  class="btn btn-primary select">キャンセル</button>
+    </div>
+  </div>
+  
+  <!-- 戻るボタンモーダルウィンドウ -->
+  <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>新規作成した案件情報が登録されていませんが宜しいでしょうか？</p>
+            <div class="modal-buttons">
+                <button type="button" id="yes_button"  class="btn btn-primary select">はい</button>
+                <button type="button" id="no_button"  class="btn btn-primary select">いいえ</button>
+            </div>
+        </div>
+    </div>
+  
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/js/case/case_find.js}"></script>
+  <script th:src="@{/js/case/case_back.js}"></script>
+  <!-- Template JS File -->
+  <script src="../../assets/js/scripts.js"></script>
+  <script src="../../assets/js/custom.js"></script>
+
+  <!-- Page Specific JS File -->
+
+
+</body>
+</html>

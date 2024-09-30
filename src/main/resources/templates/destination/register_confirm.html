@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>出向先登録 確認</title>
+
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <!-- CSS Libraries -->
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+<body>
+    <div id="app">
+        <div class="main-wrapper">
+            <div class="navbar-bg"></div>
+            <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+            <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <section class="section">
+                    <div class="section-header">
+                        <h1>出向先管理</h1>
+                    </div>
+
+                    <div class="section-body">
+                        <h2 class="section-title mb-5">出向先登録 確認</h2>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-8">
+                                <form th:object="${mstDestinationForm}" method="post" th:action="@{/destination/save-register}">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <h6>出向先名<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                                                <input type="text" class="form-control" th:value="${mstDestinationForm.destinationName}" readonly name="destinationName"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <h6>開始時間<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                                                <div>[[${#temporals.format(mstDestinationForm.startTime, 'HH:mm')}]]</div>
+                                                <input type="hidden" class="form-control" th:field="*{startTime}" th:value="${mstDestinationForm.startTime}" name="startTime" readonly />
+                                            </div>
+                                            <div class="form-group">
+                                                <h6>終了時間<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                                                <div>[[${#temporals.format(mstDestinationForm.endTime, 'HH:mm')}]]</div>
+                                                <input type="hidden" class="form-control" th:field="*{endTime}" th:value="${mstDestinationForm.endTime}" name="endTime" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-body">
+                                        <div class="buttons">
+                                            <a href="#" onclick="history.back(); return false;" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                                            <button type="submit" class="btn btn-success btn-lg">登録</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="insert" th:insert="~{common/footer :: footer}"></div>
+        </div>
+    </div>
+
+    <!-- General JS Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+    <!-- JS Libraries -->
+
+    <!-- Template JS File -->
+    <script th:src="@{/assets/js/scripts.js}"></script>
+    <script th:src="@{/assets/js/custom.js}"></script>
+
+    <!-- Page Specific JS File -->
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<title data-th-text="#{title} + #{title.VendorSupplier}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>業者・仕入れ先管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">業者・仕入れ先変更 確認</h2>
+            <p class="section-lead">
+               この情報で変更します。よろしいですか？
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form method = "post" th:object="${mstSupplierForm}" th:action="@{/supplier-management/saveUpdate}">
+                  <div class="card">
+                    <div class="card-body">
+                    
+                     <div class="form-group">
+                      <h6>種別</h6>
+                      <h5><span th:text="${mstSupplierForm.classification}"></span></h5> 
+                    </div>
+                    
+                      <div class="form-group p-1">
+                        <h6>業者・仕入先名<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.venderName}" readonly>
+                      </div>
+                      
+                      <div class="form-group w-5 p-1">
+                        <h6>郵便番号<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.postCode}" readonly>
+                      </div>
+                      
+                      <div class="form-group">
+                      <h6>都道府県</h6>
+                      <h5><span th:text="${mstSupplierForm.prefectures}"></span></h5> 
+                     
+                    </div>
+                      
+                      <div class="form-group w-5 p-1">
+                        <h6>住所<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.address}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>建物名</h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.buildingName}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>電話番号<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.phone}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>FAX番号</h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.faxNum1}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>メールアドレス<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.email}" readonly>
+                      </div>
+              
+                    <div class="form-group p-1">
+                        <h6>担当部署<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.department}" readonly>
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>担当者名<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6> <input type="text" class="form-control"
+                          th:value="${mstSupplierForm.staffName}" readonly>
+                      </div>
+                      
+                  <div class="form-group">
+                      <label class="custom-switch mt-2 pl-0">
+                      </label>
+                      </div>
+
+                      <input type="hidden" name="transactionToken" th:value="${transactionToken}"> 
+
+                      <input type="hidden" th:field="*{id}" th:value="${mstSupplierForm.id}" >
+                      <input type="hidden" th:field="*{classification}" th:value="${mstSupplierForm.classification}" >
+                      <input type="hidden" th:field="*{venderName}" th:value="${mstSupplierForm.venderName}" >
+                      <input type="hidden" th:field="*{postCode}" th:value="${mstSupplierForm.postCode}" >
+                      <input type="hidden" th:field="*{prefectures}" th:value="${mstSupplierForm.prefectures}" >
+                      <input type="hidden" th:field="*{address}" th:value="${mstSupplierForm.address}" >
+                      <input type="hidden" th:field="*{buildingName}" th:value="${mstSupplierForm.buildingName}" >
+                      <input type="hidden" th:field="*{phone}" th:value="${mstSupplierForm.phone}" >
+                      <input type="hidden" th:field="*{faxNum1}" th:value="${mstSupplierForm.faxNum1}" >
+                      <input type="hidden" th:field="*{email}" th:value="${mstSupplierForm.email}" >
+                      <input type="hidden" th:field="*{department}" th:value="${mstSupplierForm.department}" >
+                      <input type="hidden" th:field="*{staffName}" th:value="${mstSupplierForm.staffName}" >
+                      <input type="hidden" th:field="*{status}" th:value="${mstSupplierForm.status}">
+                      <input type="hidden" th:field="*{createdAt}" th:value="${mstSupplierForm.createdAt}">
+                      <input type="hidden" th:field="*{updatedAt}" th:value="${mstSupplierForm.updatedAt}">
+                      
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a href="javascript:history.back();" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                      <button type="submit" class="btn btn-success btn-lg">変更</button>
+                    </div>
+                  </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+
+</body>
+</html>

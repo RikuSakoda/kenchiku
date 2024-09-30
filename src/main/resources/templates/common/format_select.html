@@ -1,0 +1,7 @@
+<select class="form-control" th:id="${fieldName}" th:name="${fieldName}"  th:fragment="format_select(object, fieldName)">
+  <option></option>
+   <th:block th:each="pref : ${object}">
+      <option th:value="${pref.codeName}"><span th:text="${pref.codeName}"></span>
+      </option>
+   </th:block>
+</select>

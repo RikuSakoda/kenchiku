@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+<title data-th-text="#{title} + #{title.user}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>ユーザー管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">ユーザー新規登録 確認</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/user/save}" th:object="${mstUserForm}" method="post">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label>ユーザー名</label> <span th:text="${mstUserForm.loginCd}">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPassword5">パスワード</label> <span th:text="${mstUserForm.password}">
+                      </div>
+                      <div class="form-group">
+                        <label>権限</label> <span th:text="${mstAuth.name}"></span>
+                      </div>
+                      <div class="form-group w-50 float-left p-1">
+                        <label>姓</label> <span th:text="${mstUserForm.lName}"></span>
+                      </div>
+                      <div class="form-group p-1">
+                        <label>名</label> <span th:text="${mstUserForm.fName}">
+                      </div>
+                      <div class="form-group w-50 float-left p-1">
+                        <label>姓カナ</label> <span th:text="${mstUserForm.lNameKana}">
+                      </div>
+                      <div class="form-group p-1">
+                        <label>名カナ</label> <span th:text="${mstUserForm.fNameKana}">
+                      </div>
+                      <div class="form-group">
+                        <label>電話番号</label> <span th:text="${mstUserForm.tel}"></span>
+                      </div>
+                      <div class="form-group">
+                        <label>Email</label> <span th:text="${mstUserForm.email}"></span>
+                      </div>
+
+                      <input type="hidden" th:field="*{loginCd}" th:value="${mstUserForm.loginCd}" /> <input type="hidden" th:field="*{password}" th:value="${mstUserForm.password}" /> <input type="hidden" th:field="*{lName}" th:value="${mstUserForm.lName}" /> <input type="hidden" th:field="*{fName}" th:value="${mstUserForm.fName}" /> <input type="hidden" th:field="*{lNameKana}" th:value="${mstUserForm.lNameKana}" /> <input type="hidden" th:field="*{fNameKana}" th:value="${mstUserForm.fNameKana}" /> <input type="hidden" th:field="*{tel}" th:value="${mstUserForm.tel}" /> <input type="hidden" th:field="*{email}" th:value="${mstUserForm.email}" /> <input type="hidden" th:field="*{status}" th:value="${mstUserForm.status}" /> <input type="hidden" th:field="*{mstAuthId}" th:value="${mstUserForm.mstAuthId}" /> <input type="hidden" th:field="*{transactionToken}"
+                        th:value="${mstUserForm.transactionToken}" />
+
+
+                    </div>
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a onclick="history.back();" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                      <button type="submit" class="btn btn-success btn-lg">登録</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+
+</body>
+</html>

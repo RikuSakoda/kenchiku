@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <title data-th-text="#{title} + #{title.customer} + #{title.register}"></title>
+
+  <!-- General CSS Files -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <!-- CSS Libraries -->
+
+  <!-- Template CSS -->
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>顧客管理</h1>
+          </div>
+          
+          <div class="section-body">
+            <h2 class="section-title mb-5">顧客新規登録</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/customer/register}" th:object="${mstCustomer}" method="post">
+                  <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+                  <div class="card">
+                    <div class="card-body">
+                      
+                      <div class="form-group">
+                        <h6>個人・法人区分<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <select class="form-control w-50" th:field="*{cust_kind}">
+                          <option value="法人">法人</option>
+                          <option value="個人">個人</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>法人名<span class="badge badge badge-danger ml-1 mt-0">必須</h6>
+                        <input type="text" class="form-control" th:field="*{corpName}" th:classappend="${#fields.hasErrors('corpName')} ? 'is-invalid'">
+
+						<small class="invalid-feedback" th:if="${#fields.hasErrors('corpName')}" th:errors="*{corpName}"></small>
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>法人名カナ<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control" th:field="*{corpKana}" th:classappend="${#fields.hasErrors('corpKana')} ? 'is-invalid'">
+						<small class="invalid-feedback" th:if="${#fields.hasErrors('corpKana')}" th:errors="*{corpKana}"></small>
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>部署</h6>
+                        <input type="text" class="form-control" th:field="*{department}">
+                        <small id="" class="form-text text-muted">
+                          
+                        </small>
+                      </div>
+                      
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>姓<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control" th:field="*{lName}" th:classappend="${#fields.hasErrors('lName')} ? 'is-invalid'" />
+                         
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('lName')}" th:errors="*{lName}"></small>
+                       
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>名<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control w-50" th:field="*{fName}" th:classappend="${#fields.hasErrors('fName')} ? 'is-invalid'" />
+                        
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('fName')}" th:errors="*{fName}"></small>
+                      </div>
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>姓カナ<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control" th:field="*{lNameKana}" th:classappend="${#fields.hasErrors('lNameKana')} ? 'is-invalid'" />
+                   
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('lNameKana')}" th:errors="*{lNameKana}"></small>
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>名カナ<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control w-50" th:field="*{fNameKana}" th:classappend="${#fields.hasErrors('fNameKana')} ? 'is-invalid'" />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('fNameKana')}" th:errors="*{fNameKana}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>郵便番号<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control w-50" th:field="*{zip}" th:classappend="${#fields.hasErrors('zip')} ? 'is-invalid'" />                     
+						<small id="telHelpBlock" class="form-text text-muted"> ハイフンを含む書式で入力してください（例：012-3456） </small>
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}"></small>
+                          
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>都道府県<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <select class="form-control w-50" th:field="*{prefectures}">
+                           <th:block th:each="pref : ${prefectures}">
+                              <option th:value="${pref.codeName}"><span th:text="${pref.codeName}"></span></option>
+                           </th:block>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>住所<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control" th:field="*{address1}" th:classappend="${#fields.hasErrors('address1')} ? 'is-invalid'">
+						<small class="invalid-feedback" th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>建物名</h6>
+                        <input type="text" class="form-control" th:field="*{address2}">
+                        <small id="" class="form-text text-muted">
+                          
+                        </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>電話番号<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="text" class="form-control w-50" th:field="*{tel}" th:classappend="${#fields.hasErrors('tel')} ? 'is-invalid'" />               
+							<small class="form-text text-muted"> ハイフンを含む書式で入力してください（例：012-3456-7890） </small> 
+							<small class="invalid-feedback" th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>携帯番号</h6>
+                        <input type="text" class="form-control w-50" th:field="*{mobile}" th:classappend="${#fields.hasErrors('mobile')} ? 'is-invalid'" />
+						<small class="form-text text-muted"> ハイフンを含む書式で入力してください（例：012-3456-7890） </small>
+						<small class="invalid-feedback" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>メールアドレス<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <input type="email" class="form-control" th:field="*{mail}" th:classappend="${#fields.hasErrors('mail')} ? 'is-invalid'">
+						<small class="invalid-feedback" th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></small>
+                      </div>
+                      <div class="form-group">
+                        <label class="custom-switch mt-2 pl-0">
+                            
+                            <input type="checkbox" class="custom-checkbox" th:field="*{mailFlg}">
+                            <span class="custom-switch-description">退去立会終了後にメール送信</span>
+                        </label>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a
+                        href="/customer"
+                        class="btn btn-light btn-lg"
+                        >前の画面へ戻る</a
+                      >
+                      <button type="submit" class="btn btn-success btn-lg">確認</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          Copyright &copy; se-project 2024
+        </div>
+        <div class="footer-right">
+          2.3.0
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraries -->
+
+  <!-- Template JS File -->
+  <script src="../../assets/js/scripts.js"></script>
+  <script src="../../assets/js/custom.js"></script>
+
+  <!-- Page Specific JS File -->
+  
+</body>
+</html>

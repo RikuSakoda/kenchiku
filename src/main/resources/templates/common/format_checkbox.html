@@ -1,0 +1,7 @@
+<select class="form-control" th:id="${myObject}" th:name="${myObject}"  th:fragment="format_checkbox(object)">
+  <option></option>
+   <th:block th:each="pref : ${object}">
+      <option th:value="${pref.codeName}"><span th:text="${pref.codeName}"></span>
+      </option>
+   </th:block>
+</select>

@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Cache-Control" content="no-cache">
+  <title data-th-text="#{title} + #{title.case}"></title>
+
+  <!-- General CSS Files -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="../../../develop/volumes/web/static/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../develop/volumes/web/static/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css">
+
+  <!-- Template CSS -->
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+
+          
+          <div class="section-body">
+            <!-- <h2 class="section-title">DataTables</h2>
+            <p class="section-lead">
+              We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>.
+            </p> -->
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    
+                    <div class="table table-bordered pt-3 pb-4 pl-4">
+                      <form method="post" action="anken_bukken_select.html">
+                        <label class="">物件名で物件を検索してください</label><br />
+                        <input id="bukken_search" type="text" class="form-control form-control-lg w-50 float-left" name="bukken_search" required autofocus/>
+                        <button type="button" class="btn btn-primary btn-lg w-25 ml-1" id="search">物件検索</button>
+                      </form>
+                    </div>
+
+                    <div class="table-responsive">
+                      <table class="table table-striped" id="bukken-table">
+                        <thead>
+                          <tr>
+                            <th class="text-center">
+                            </th>
+                            <th>物件名</th>
+                            <th>郵便番号<br />住所、建物名</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                          <th:block th:each="floor : ${floors}">
+                          <tr>
+                            <td>
+                              <button class="btn btn-primary select" th:value="${floor.id}">選択</button>
+                              
+                            </td>
+                            <td>
+                              <span th:text="${floor.floorName}" id="floorName"></span>
+                            </td>
+                            <td>
+                              <span th:text="${floor.postCode}"></span><br />
+                              <span th:text="${floor.address}"></span><br />
+                              <span th:text="${floor.buildingName}"></span>
+                            </td>
+                          </tr>
+                      </th:block>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          Copyright &copy; se-project 2024
+        </div>
+        <div class="footer-right">
+          2.3.0
+        </div>
+      </footer>
+    </div>
+  </div>
+  <div id="updatemodal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">変更が完了しました</h5>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraies -->
+  <!-- <script src="../../../develop/volumes/web/static/node_modules/datatables/media/js/jquery.dataTables.min.js"></script> -->
+  <script src="../../assets/js/admin/jquery.dataTables.custom.js"></script>
+  <script src="../../../develop/volumes/web/static/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../../develop/volumes/web/static/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js"></script>
+  <script src="../../../develop/volumes/web/static/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+
+  <!-- Template JS File -->
+  <script src="../../assets/js/scripts.js"></script>
+  <script src="../../assets/js/custom.js"></script>
+
+  <!-- Page Specific JS File -->
+  <script src="../../assets/js/page/modules-datatables.js"></script>
+  
+  <script>
+    
+
+    
+   
+
+    //データテーブルの初期化
+      
+      let table = $("#bukken-table").dataTable({
+        columnDefs: [{  }],
+        order: [],
+        bFilter: false,
+        columns: [
+          { orderable: false },
+          { orderable: true },
+          { orderable: true },
+        ],
+        deferRender: false,
+      });
+      
+
+    $('.select').on("click", function () {
+      
+      // 親ウィンドウの存在チェック
+      if (!window.opener || window.opener.closed)
+      {
+        console.log("not found");
+          // 親ウィンドウが存在しない場合
+          window.alert('メインウィンドウが見当たりません。');
+      }
+      else
+      {
+    	  // 物件名を取得
+          var floorName = $(this).closest('tr').find('#floorName').text();
+          var floorID = $(this).val();
+          // 物件名を親ウィンドウの特定の場所に表示
+          window.opener.document.getElementById("aaaa").value = floorName;
+          window.opener.document.getElementById("floorid").value = floorID;
+          
+      }
+        window.close();
+      });
+
+  </script>
+   <script src="../../assets/js/admin/sep.dataTables.common.js"></script>
+
+
+</body>
+</html>

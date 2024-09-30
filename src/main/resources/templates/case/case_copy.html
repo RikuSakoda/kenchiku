@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<title data-th-text="#{title} + #{title.case}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/jqvmap/dist/jqvmap.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/summernote/dist/summernote-bs4.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.carousel.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+
+<!-- Bootstrap Icons CSS -->
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>案件管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">案件コピー選択</h2>
+            <!-- <h2 class="section-title">DataTables</h2>
+            <p class="section-lead">
+              We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>.
+            </p> -->
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <th:block th:each="mstMatter : ${mstMatter}">
+                        <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+                        <h5>案件情報</h5>
+                        <table class="table table-striped" id="anken-copy-table">
+                          <thead>
+                            <tr>
+                              <th>状況ステータス</th>
+                              <th>有効無効ステータス</th>
+                              <th>顧客名</th>
+                              <th>物件名</th>
+                              <th>種別</th>
+                              <th>案件名</th>
+                              <th>訪問予定日時</th>
+                              <th>訪問者名</th>
+                              <th>敷金</th>
+                              <th>賃貸契約日</th>
+                              <th>賃貸契約終了日</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody">
+                            <tr>
+                              <td><span th:text="${mstMatter.situationStatus}"></span></td>
+                              <td><th:block th:if="${mstMatter.status} eq '1'">
+                                  <span>有効</span>
+                                </th:block> <th:block th:if="${mstMatter.status} ne '1'">
+                                  <span>無効</span>
+                                </th:block></td>
+                              <td><span th:text="${mstMatter.customerName}"></span></td>
+                              <td><span th:text="${mstMatter.propertyName}"> </span></td>
+                              <td><span th:text="${mstMatter.taskSubstance}"></span></td>
+                              <td><span th:text="${mstMatter.matterName}"></span></td>
+                              <td><span th:text="${mstMatter.scheduledVisitDatetime}"></span></td>
+                              <td><span th:text="${mstMatter.visitName}"></span></td>
+                              <td><span th:text="${mstMatter.securityDeposit}"></span></td>
+                              <td><span th:text="${mstMatter.rentalContractDate}"></span></td>
+                              <td><span th:text="${mstMatter.rentalContractEndDate}"></span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <table class="table table-striped" id="anken-copy-table">
+                          <thead>
+                            <tr>
+                              <th>入居者姓</th>
+                              <th>入居者名</th>
+                              <th>入居者姓カナ</th>
+                              <th>入居者名カナ</th>
+                              <th>入居者市外局番</th>
+                              <th>入居者市内局番</th>
+                              <th>入居者電話番号</th>
+                              <th>入居者転居先郵便番号</th>
+                              <th>入居者転居先都道府県</th>
+                              <th>入居者転居先住所</th>
+                              <th>入居者転居先建物名</th>
+                              <th>入居者銀行名</th>
+                              <th>入居者銀行支店名</th>
+                              <th>入居者銀行口座番号</th>
+                              <th>入居者銀行口座名義</th>
+                              <th>入居者銀行口座名義カナ</th>
+                              <th>シリンダー番号</th>
+                              <th>備考</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td><span th:text="${mstMatter.mstTenantForm.lastName}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.firstName}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.lastNameKana}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.firstNameKana}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.areaCode}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.cityCode}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.telephoneNumber}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.postCode}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.prefectures}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.address}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.buildingName}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.bankName}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.bankBranchName}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.bankAccountNumber}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.bankAccountName}"></span></td>
+                              <td><span
+                                th:text="${mstMatter.mstTenantForm.bankAccountNameKana}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.cylinderNumber}"></span></td>
+                              <td><span th:text="${mstMatter.mstTenantForm.note}"></span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </th:block>
+
+                      <h5>見積情報</h5>
+
+                      <div th:if="${message}">
+                        <p th:text="${message}"></p>
+                      </div>
+
+                  <div th:unless="${message}">
+                      <div class="form-group">
+                        <h6>バージョン切り替え</h6>
+                        <form th:action="@{/case/copy}" method="get" id="estimateVer"
+                          name="copy_ver">
+                          <input type="hidden" th:value="${id}" name="id"> <select
+                            class="form-control" id="estimateVer_select" name="estimateVer">
+                            <th:block th:each="verInfo :${ver}">
+                              <option th:value=${verInfo.estimateId.estimateVersion}
+                                th:selected="${verInfo.estimateId.estimateVersion == estimateVer}"
+                                th:inline="text">[[${verInfo.estimateId.estimateVersion}]]</option>
+
+                            </th:block>
+                          </select>
+
+                        </form>
+                      </div>
+
+                      <th:block th:each="estimate : ${estimate}">
+                        <table class="table table-striped" id="anken-copy-table">
+                          <thead>
+                            <tr>
+                              <th>工事区分分類</th>
+                              <th>工事区分</th>
+                              <th>工事区分詳細</th>
+                              <th>単位</th>
+                              <th>数量</th>
+                              <th>見積用単価</th>
+                              <th>見積用金額</th>
+                              <th>原状回復工事費用承諾書用単価</th>
+                              <th>入居者負担割合</th>
+                              <th>入居者負担額</th>
+                              <th>入居者小計</th>
+                              <th>備考</th>
+                              <th>見積用小計</th>
+                              <th>見積用消費税</th>
+                              <th>見積用合計</th>
+                              <th>原状回復工事費用承諾書用小計</th>
+                              <th>原状回復工事費用承諾書用消費税</th>
+                              <th>原状回復工事費用承諾書用合計</th>
+                              <th>メモ</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td><span th:text="${estimate.constructionName}"></span></td>
+                              <td><span th:text="${estimate.constructionClassificationName}"></span></td>
+                              <td><span th:text="${estimate.unit}"></span></td>
+                              <td><span th:text="${estimate.volume}"></span></td>
+                              <td><span th:text="${estimate.estimateUnitPrice}"></span></td>
+                              <td><span th:text="${estimate.estimateAmount}"></span></td>
+                              <td><span th:text="${estimate.approvalUnitPrice}"></span></td>
+                              <td><span th:text="${estimate.tenantBurdenRatio}"></span></td>
+                              <td><span th:text="${estimate.tenantBurdenAmount}"></span></td>
+                              <td><span th:text="${estimate.tenantAmount}"></span></td>
+                              <td><span th:text="${estimate.note}"></span></td>
+                              <td><span th:text="${estimate.estimateId.estimateSubtotal}"></span></td>
+                              <td><span th:text="${estimate.estimateId.estimateConsumptionTax}"></span></td>
+                              <td><span th:text="${estimate.estimateId.estimateTotal}"></span></td>
+                              <td><span th:text="${estimate.estimateId.approvalSubtotal}"></span></td>
+                              <td><span th:text="${estimate.estimateId.approvalConsumptionTax}"></span></td>
+                              <td><span th:text="${estimate.estimateId.approvalTotal}"></span></td>
+                              <td><span th:text="${estimate.estimateId.memo}"></span></td>
+
+                            </tr>
+                          </tbody>
+                        </table>
+                      </th:block>
+                    </div>
+                      <div class="section-body">
+                        <div class="buttons">
+                          <a href="/case" class="btn btn-light btn-lg">戻る</a> <a
+                            th:href="@{/case/copyConfirm(id=${mstMatter.id},estimateVer=${estimateVer})}"
+                            class="btn btn-primary">確認</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+  <div class="insert" th:insert="~{common/update_end :: update_end}"></div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+
+  <script th:inline="javascript">
+			var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+			var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+		</script>
+
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <script th:src="@{/js/case/case.js}"></script>
+
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+
+
+</body>
+</html>

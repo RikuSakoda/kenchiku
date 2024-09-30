@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+<title data-th-text="#{title} + #{title.user}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>吉野管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">ユーザ変更登録 確認</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:object="${mstYoshinoForm}" method="post" th:action="@{/user_yoshino/save-update}">
+                  <div class="card">
+                    <div class="card-body">
+                    
+                      <!-- IDフィールドの追加 -->
+                      <input type="hidden" th:field="*{id}" th:value="${mstYoshinoForm.id}">
+                      <input type="hidden" th:field="*{transactionToken}" th:value="${mstYoshinoForm.transactionToken}">
+
+                      <div class="form-group">
+                        <h6>顧客名<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstYoshinoForm.custcorpname}"></span></h5>
+                        <input type="hidden" th:field="*{custcorpname}" th:value="${mstYoshinoForm.custcorpname}">
+                        <input type="hidden" th:field="*{custkind}" th:value="${mstYoshinoForm.custkind}">
+                      </div>
+
+                      <div class="form-group">
+                        <h6>顧客名（かな）<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstYoshinoForm.custcorpnamekana}"></span></h5>
+                        <input type="hidden" th:field="*{custcorpnamekana}" th:value="${mstYoshinoForm.custcorpnamekana}">
+                      </div>
+
+                      <div class="form-group">
+                        <h6>部署名</h6>
+                        <h5><span th:text="${mstYoshinoForm.custdepartmentname}"></span></h5>
+                        <input type="hidden" th:field="*{custdepartmentname}" th:value="${mstYoshinoForm.custdepartmentname}">
+                      </div>
+
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>姓<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstYoshinoForm.custlname}"></span></h5>
+                        <input type="hidden" th:field="*{custlname}" th:value="${mstYoshinoForm.custlname}">
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>名<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstYoshinoForm.custfname}"></span></h5>
+                        <input type="hidden" th:field="*{custfname}" th:value="${mstYoshinoForm.custfname}">
+                      </div>
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>姓（かな）<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstYoshinoForm.custlnamekana}"></span></h5>
+                        <input type="hidden" th:field="*{custlnamekana}" th:value="${mstYoshinoForm.custlnamekana}">
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>名（かな）<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstYoshinoForm.custfnamekana}"></span></h5>
+                        <input type="hidden" th:field="*{custfnamekana}" th:value="${mstYoshinoForm.custfnamekana}">
+                      </div>
+
+                      <div class="form-group">
+                        <h6>電話番号</h6>
+                        <h5><span th:text="${mstYoshinoForm.custphone}"></span></h5>
+                        <input type="hidden" th:field="*{custphone}" th:value="${mstYoshinoForm.custphone}">
+                      </div>
+                      <div class="form-group">
+                        <h6>携帯電話番号</h6>
+                        <h5><span th:text="${mstYoshinoForm.custmobilephone}"></span></h5>
+                        <input type="hidden" th:field="*{custmobilephone}" th:value="${mstYoshinoForm.custmobilephone}">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a onclick="history.back();" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                      <button type="submit" class="btn btn-success btn-lg">変更</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+</body>
+</html>

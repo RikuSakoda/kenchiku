@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<title data-th-text="#{title} + #{title. constructionClassification}+#{title.update}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>工事区分管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">工事区分変更</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/cost/update}" th:object="${mstCostForm}" method="post">
+                 <!-- Transaction Token -->
+                  <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+                  <input type="hidden" name="id" th:field="*{id}" th:value="${mstCostForm.id}">                  
+                <div class="card">
+                  <div class="card-body">                   
+                  
+                    <div class="form-group">
+                      <h6>顧客名<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <select class="form-control w-50" th:field="*{custId}" >
+                        <th:block th:each="cus : ${customer}">
+                          <th:block th:if="${mstCostForm.custId} eq ${cus.id}">
+                           <option selected th:value="${cus.id}" ><span th:text="${cus.corpName}" ></span></option>  
+                          </th:block>
+                          <th:block th:if="${mstCostForm.custId} ne ${cus.id}">
+                           <option th:value="${cus.id}"><span th:text="${cus.corpName}"></span></option>
+                          </th:block>
+                        </th:block> 
+                            <input type="hidden" th:field="*{custName}" th:value="${mstCostForm.custName}">
+                      </select>
+                    </div>
+                    
+                    <div class="form-group">
+                      <h6>工事区分分類<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <select class="form-control w-50" th:field="*{costGroupId}" >
+                        <th:block th:each="con : ${construction}">
+                          <th:block th:if="${mstCostForm.costGroupId} eq ${con.id}">
+                           <option selected th:value="${con.id}"><span th:text="${con.costGroupName}"></span></option>
+                          </th:block>
+                          <th:block th:if="${mstCostForm.costGroupId} ne ${con.id}">
+                           <option th:value="${con.id}"><span th:text="${con.costGroupName}"></span></option>
+                          </th:block>
+                          
+                        </th:block> 
+                            
+                      </select>
+                    </div>
+                    
+                    <div class="form-group">
+                      <h6>表示順<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <input type="text" class="form-control" th:field="*{viewDetail}"
+                          th:classappend="${#fields.hasErrors('viewDetail')} ? 'is-invalid'">
+                      <small id="" class="invalid-feedback" th:if="${#fields.hasErrors('viewDetail')}" th:errors="*{viewDetail}"></small>
+                    </div>
+                    
+                    <div class="form-group">
+                      <h6>作業内容<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <input type="text" class="form-control" th:field="*{costContents}"
+                          th:classappend="${#fields.hasErrors('costContents')} ? 'is-invalid'">
+                      <small id="" class="invalid-feedback" th:if="${#fields.hasErrors('costContents')}" th:errors="*{costContents}"></small>
+                    </div>
+                    
+                    <div class="form-group">
+                      <h6>作業内容カナ<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <input type="text" class="form-control" th:field="*{contentsKana}"
+                          th:classappend="${#fields.hasErrors('contentsKana')} ? 'is-invalid'">
+                      <small id="" class="invalid-feedback" th:if="${#fields.hasErrors('contentsKana')}" th:errors="*{contentsKana}"></small>
+                    </div>
+                    
+                     <div class="form-group">
+                      <h6>単位<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <select class="form-control w-50" th:field="*{costUnitId}">
+                         <th:block th:each="pref : ${unitId}">
+                            <th:block th:if="${mstCostForm.costUnitId} eq ${pref.codeName}" >
+                            <option selected th:value="${pref.codeName}"><span th:text="${pref.codeName}"></span></option> 
+                            </th:block> 
+                            <th:block th:if="${mstCostForm.costUnitId} ne ${pref.codeName}" >
+                              <option th:value="${pref.codeName}"><span th:text="${pref.codeName}"></span></option>
+                           <!-- </th:block> --> 
+                         </th:block>
+                      </select>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                      <h6>原状回復工事費用承諾書用単価<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <input type="text" class="form-control" th:field="*{costPrice}"
+                          th:classappend="${#fields.hasErrors('costPrice')} ? 'is-invalid'">
+                      <small id="" class="invalid-feedback" th:if="${#fields.hasErrors('costPrice')}" th:errors="*{costPrice}"></small>
+                    </div>   
+                    
+                    <div class="form-group">
+                      <h6>見積用単価<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <input type="text" class="form-control" th:field="*{costPrice2}"
+                          th:classappend="${#fields.hasErrors('costPrice2')} ? 'is-invalid'">
+                      <small id="" class="invalid-feedback" th:if="${#fields.hasErrors('costPrice2')}" th:errors="*{costPrice2}"></small>
+                    </div>          
+
+                 <input type="hidden" th:field="*{createAt}" th:value="${mstCostForm.createAt}">
+              
+              
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a href="/cost" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                      <button type="submit" class="btn btn-success btn-lg">確認</button>
+                    </div>
+                  </div>
+                  </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+
+</body>
+</html>

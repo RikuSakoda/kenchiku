@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>編集確認ポップアップ</title>
+    <style>
+        /* モーダルのスタイル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+        }
+        .modal-buttons {
+            margin-top: 20px;
+        }
+        .modal-buttons button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>複数のテキスト入力画面</h2>
+    <form>
+        <label>テキスト1を入力してください:</label>
+        <textarea class="text-input" rows="2" cols="50"></textarea><br><br>
+        <label>テキスト2を入力してください:</label>
+        <textarea class="text-input" rows="2" cols="50"></textarea><br><br>
+        <label>テキスト3を入力してください:</label>
+        <textarea class="text-input" rows="2" cols="50"></textarea><br><br>
+        <button type="button" id="closeButton">閉じる</button>
+    </form>
+
+    <!-- モーダルウィンドウ -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage">編集した情報は反映されていませんが宜しいでしょうか？</p>
+            <div class="modal-buttons">
+                <button id="yesButton">はい</button>
+                <button id="noButton">いいえ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const closeButton = document.getElementById('closeButton');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const textInputs = document.querySelectorAll('.text-input'); // 全てのテキストエリアを取得
+        const modalMessage = document.getElementById('modalMessage');
+
+        // 閉じるボタンを押したときに確認モーダルを表示
+        closeButton.addEventListener('click', function() {
+            let hasContent = false;
+            textInputs.forEach(textInput => {
+                if (textInput.value !== '') {
+                    hasContent = true;
+                }
+            });
+
+            // 少なくとも1つのテキストエリアに内容がある場合のみモーダルを表示
+            if (hasContent) {
+                confirmationModal.style.display = 'block';
+            }
+        });
+
+        // 「はい」ボタンを押したとき
+        yesButton.addEventListener('click', function() {
+            modalMessage.textContent = '変更は破棄されました。';
+            textInputs.forEach(textInput => {
+                textInput.value = '';  // テキスト内容を破棄
+            });
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+            setTimeout(() => {
+                confirmationModal.style.display = 'none';
+                modalMessage.textContent = '編集した情報は反映されていませんが宜しいでしょうか？';
+                yesButton.style.display = 'inline-block';
+                noButton.style.display = 'inline-block';
+            }, 1000);  // 1秒後にモーダルを閉じる
+        });
+
+        // 「いいえ」ボタンを押したとき
+        noButton.addEventListener('click', function() {
+            confirmationModal.style.display = 'none';
+        });
+
+        // ポップアップ外をクリックしても閉じられないようにする
+        window.addEventListener('click', function(event) {
+            if (event.target === confirmationModal) {
+                // 何も実行しない
+            }
+        });
+    </script>
+</body>
+</html>

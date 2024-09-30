@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title data-th-text="#{title} + #{title.VendorSupplier}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+
+<style type="text/css">
+.errorStr {
+	color: red;
+}
+</style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>業者・仕入れ先管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">業者・仕入れ先新規登録</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/supplier-management/register}"
+                  th:object="${mstSupplierManagement}" method="post" novalidate>
+
+                  <!-- Transaction Token -->
+                  <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <h6>
+                          種別
+                        </h6>
+                        <select class="form-control w-50" th:field="*{classification}">
+                          <small class="invalid-feedback"
+                          th:if="${#fields.hasErrors('classification')}"
+                          th:errors="*{classification}"></small>
+                          <th:block th:each="select : ${select_supplier}">
+                            <option th:value="${select.codeName}"><span
+                                th:text="${select.codeName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          業者・仕入れ先名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{venderName}"
+                          th:classappend="${#fields.hasErrors('venderName')} ? 'is-invalid'">
+                        <small id="" class="invalid-feedback"
+                          th:if="${#fields.hasErrors('venderName')}" th:errors="*{venderName}">
+                        </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          郵便番号<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{postCode}" th:classappend="${#fields.hasErrors('postCode')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          都道府県
+                        </h6>
+                        <select class="form-control w-50" th:field="*{prefectures}">
+                          <small class="invalid-feedback"
+                          th:if="${#fields.hasErrors('prefectures')}" th:errors="*{prefectures}"></small>
+                          <th:block th:each="pref : ${prefectures}">
+                            <option th:value="${pref.codeName}"><span
+                                th:text="${pref.codeName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          住所<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{address}"
+                          th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('address')}"
+                          th:errors="*{address}"></small>
+                      </div>
+                      <div class="form-group">
+                        <h6>建物名</h6>
+                        <input type="text" class="form-control" th:field="*{buildingName}">
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          電話番号<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{phone}"
+                          th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('phone')}"
+                          th:errors="*{phone}"></small>
+                      </div>
+                      <div class="form-group">
+                        <h6>FAX番号</h6>
+                        <input type="text" class="form-control" th:field="*{faxNum1}" th:classappend="${#fields.hasErrors('faxNum1')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('faxNum1')}" th:errors="*{faxNum1}"></small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          メールアドレス<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          担当部署<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{department}" th:classappend="${#fields.hasErrors('department')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          担当者名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{staffName}" th:classappend="${#fields.hasErrors('department')} ? 'is-invalid'"> <small
+                          id="" class="invalid-feedback" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"> </small>
+                      </div>
+
+
+
+                    
+
+
+
+                    <input type="hidden" value="1" id="status" th:field="*{status}" name="status" />
+                </form>
+                <div class="section-body">
+                  <div class="buttons">
+                    <a href="/supplier-management" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                    <button type="submit" class="btn btn-success btn-lg">確認</button>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="insert" th:insert="~{common/footer :: footer}"></div>
+  </div>
+
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="@{/assets/js/stisla.js}"></script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+</body>
+</html>

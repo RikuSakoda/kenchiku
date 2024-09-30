@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title data-th-text="#{title} + #{title.VendorSupplier}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+<link rel="stylesheet" th:href="@{/assets/css/settings.css}">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/jqvmap/dist/jqvmap.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/summernote/dist/summernote-bs4.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.carousel.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>業者・仕入れ先管理</h1>
+          </div>
+
+          <div class="section-body">
+
+            <!-- 検索フォームの追加 -->
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="ownerSearchButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">業者・仕入れ先検索
+              </button>
+              <div class="dropdown-menu w-100 p-4 rounded border border-dark"
+                aria-labelledby="ownerSearchButton">
+                <form th:action="@{/supplier-management/search}" th:object="${searchSupplier}"
+                  method="get">
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="classification">種別</label> <select id="classification"
+                        class="form-control" th:field="*{classification}">
+                        <option value=""></option>
+                        <option value="個人">個人</option>
+                        <option value="業者">業者</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="venderName">業者・仕入先名</label> <input type="text"
+                        class="form-control" th:field="*{venderName}" id="venderName">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="postCode">郵便番号</label> <input type="text" class="form-control"
+                        th:field="*{postCode}" id="postCode">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="prefecture">都道府県</label> <select class="form-control"
+                        th:field="*{prefectures}">
+                        <option value=""></option>
+                        <th:block th:each="pref : ${prefectures}">
+                          <option th:value="${pref.codeName}"><span
+                              th:text="${pref.codeName}"></span>
+                          </option>
+                        </th:block>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="address">住所</label> <input type="text" class="form-control"
+                        th:field="*{address}" id="address">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="buildingName">建物名</label> <input type="text" class="form-control"
+                        th:field="*{buildingName}" id="buildingName">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="phone">電話番号</label> <input type="text" class="form-control"
+                        th:field="*{phone}" id="phone">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="faxNum1">FAX番号</label> <input type="text" class="form-control"
+                        th:field="*{faxNum1}" id="faxNum1">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="email">メールアドレス</label> <input type="text" class="form-control"
+                        th:field="*{email}" id="email">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="department">担当部署</label> <input type="text" class="form-control"
+                        th:field="*{department}" id="department">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="staffName">担当者名</label> <input type="text" class="form-control"
+                        th:field="*{staffName}" id="staffName">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="status">ステータス</label> <select id="status" class="form-control"
+                        th:field="*{status}">
+                        <option value=""></option>
+                        <option value="active">有効</option>
+                        <option value="inactive">無効</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="dateFrom">登録日</label> <input type="date" class="form-control"
+                        th:field="*{creatdat}" id="dateFrom">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="updateDate">更新日</label> <input type="date" class="form-control"
+                        th:field="*{updatedAt1}" id="updateDate">
+                    </div>
+                    <div class="form-group col-md-2 align-self-end">
+                      <button type="submit" class="btn btn-primary">検索</button>
+                      <button type="reset" class="btn btn-secondary">リセット</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- 検索フォームの追加終了 -->
+            <!-- <h2 class="section-title">DataTables</h2>
+            <p class="section-lead">
+              We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>.
+            </p> -->
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <a href="supplier-management/register" class="btn btn-primary btn-lg w-25 ml-1 btn-square mt-2">新規作成</a>
+                    
+                     <form method="post" th:action="@{/supplier-management/poi2}" class="upload-form">
+                      <button type="submit" class="btn btn-primary btn-lg fas fa-upload"
+                        id="uploadButton" title="アップロード"></button>
+                    </form>
+                    
+                     <form method="post" th:action="@{/supplier-management/poi}" th:object="${searchSupplier}" class="download-form">
+                      <input type="hidden" class="form-control" th:field="*{classification}" th:value="${searchSupplier.classification}" id="classification">
+                      <input type="hidden" class="form-control" th:field="*{venderName}" th:value="${searchSupplier.venderName}" id="venderName">
+                      <input type="hidden" class="form-control" th:field="*{postCode}" th:value="${searchSupplier.postCode}" id="postCode">
+                      <input type="hidden" class="form-control" th:field="*{prefectures}" th:value="${searchSupplier.prefectures}" id="prefectures">
+                      <input type="hidden" class="form-control" th:field="*{address}" th:value="${searchSupplier.address}" id="address">
+                      <input type="hidden" class="form-control" th:field="*{buildingName}" th:value="${searchSupplier.buildingName}" id="buildingName">
+                      <input type="hidden" class="form-control" th:field="*{phone}" th:value="${searchSupplier.phone}" id="phone">
+                      <input type="hidden" class="form-control" th:field="*{faxNum1}" th:value="${searchSupplier.faxNum1}" id="faxNum1">
+                      <input type="hidden" class="form-control" th:field="*{email}" th:value="${searchSupplier.email}" id="email">
+                      <input type="hidden" class="form-control" th:field="*{department}" th:value="${searchSupplier.department}" id="department">
+                      <input type="hidden" class="form-control" th:field="*{staffName}" th:value="${searchSupplier.staffName}" id="staffName">
+                      <input type="hidden" class="form-control" th:field="*{status}" th:value="${searchSupplier.status}" id="status">
+                      <input type="hidden" class="form-control" th:field="*{creatdat}" th:value="${searchSupplier.creatdat}" id="creatdat">
+                      <input type="hidden" class="form-control" th:field="*{updatedAt1}" th:value="${searchSupplier.updatedAt1}" id="updatedAt1">
+                      <button type="submit" class="btn btn-primary btn-lg btn-download btn-icon-center"
+                         id="downloadButton" title="ダウンロード"><i class="fas fa-download"></i></button>
+                    </form>
+                  </div>
+                  
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-striped" id="supplier-table">
+                        <thead>
+                          <tr>
+                            <th class="text-center"></th>
+                            <th>ステータス</th>
+                            <th>種別<br />業者・仕入れ先名
+                            </th>
+                            <th>郵便番号<br />住所・建物名
+                            </th>
+                            <th>メールアドレス</th>
+                            <th>電話番号<br />FAX番号
+                            </th>
+                            <th>担当部署<br />担当者名
+                            </th>
+                            <th>登録日<br />更新日
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                          <th:block th:each="supplier: ${supplier}">
+                            <tr>
+                              <td><a th:href="@{/supplier-management/update(id=${supplier.id})}"
+                                class="btn btn-primary">変更</a></td>
+                              <td>
+                                <div class="form-group mb-0">
+                                  <th:block th:if="${supplier.status} eq ${statusTrue}">
+                                    <label class="custom-switch mt-2 pl-0"> <input
+                                      type="checkbox" name="custom-switch-checkbox"
+                                      th:attr="data-supplier-id=${supplier.id}"
+                                      class="custom-switch-input" checked> <span
+                                      class="custom-switch-indicator"></span> <span
+                                      class="custom-switch-description">有効</span>
+                                    </label>
+                                  </th:block>
+                                  <th:block th:if="${supplier.status} ne ${statusTrue}">
+                                    <label class="custom-switch mt-2 pl-0"> <input
+                                      type="checkbox" name="custom-switch-checkbox"
+                                      th:attr="data-customer-id=${supplier.id}"
+                                      class="custom-switch-input"> <span
+                                      class="custom-switch-indicator"></span> <span
+                                      class="custom-switch-description">無効</span>
+
+
+
+                                    </label>
+                                  </th:block>
+
+                                </div>
+
+                              </td>
+                              <td><span th:text="${supplier.classification}"></span><br>
+                              <span th:text="${supplier.venderName}"></span><br /></td>
+                              <td><span th:text="${supplier.postCode}"></span><br>
+                              <span
+                                th:text="${supplier.prefectures} + ${supplier.address} + ${supplier.buildingName}"></span><br /></td>
+                              <td><span th:text="${supplier.email}"></span><br /></td>
+                              <td><span th:text="${supplier.phone}"></span><br>
+                              <span th:text="${supplier.faxNum1}"></span><br /></td>
+                              <td><span th:text="${supplier.department} "></span><br>
+                              <span th:text="${supplier.staffName}"></span><br /></td>
+                              <td>
+                                <div>[[${#temporals.format(supplier.createdAt, 'yyyy-MM-dd
+                                  HH:mm')}]]</div>
+                                <div>[[${#temporals.format(supplier.updatedAt, 'yyyy-MM-dd
+                                  HH:mm')}]]</div>
+                              </td>
+                            </tr>
+
+                          </th:block>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <div id="updatemodal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">変更が完了しました</h5>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="@{/assets/js/stisla.js}"></script>
+
+
+
+
+  <script th:inline="javascript">
+			var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+			var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+		</script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <script th:src="@{/js/Supplier/Supplier.js}"></script>
+  <script th:src="@{/js/fileUpload/fileUpload.js}"></script>
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+</body>
+
+</html>

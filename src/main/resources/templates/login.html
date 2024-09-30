@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+<!-- Googleでログインする-->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="<52387521166-qj7k5bco7jk5vg4lbvaleqfuhgrd83f9.apps.googleusercontent.com>">
+
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<title data-th-text="#{title} + #{title.login}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/bootstrap-social/bootstrap-social.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <section class="section">
+      <div class="container mt-5">
+        <div class="row">
+          <div
+            class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-6 offset-xl-4">
+            <div class="login-brand">
+              <img th:src="@{/assets/img/stisla-fill.svg}" alt="logo" width="100"
+                class="shadow-light rounded-circle">
+            </div>
+
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h4>リフォーム・修繕統合管理システム(管理画面）</h4>
+              </div>
+
+              <div class="card-body">
+                <font color="red"><span th:text="${message}"></span></font>
+                <form th:action="@{/login}" method="post" class="needs-validation" novalidate="">
+                  <div class="form-group">
+                    <label for="name">ユーザ名</label> <input id="username" type="text"
+                      class="form-control" name="username" tabindex="1" th:value="${loginUserName}" required autofocus>
+                    <div class="invalid-feedback">ユーザ名を入力してください</div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="d-block">
+                      <label for="password" class="control-label">パスワード</label>
+                      <div class="float-right">
+                        <a href="forgotPassword" class="text-small"> パスワードを忘れた方はこちら </a>
+                      </div>
+                    </div>
+                    <input id="password" type="password" class="form-control" name="password"
+                      tabindex="2" required>
+                    <div class="invalid-feedback">パスワードを入力してください</div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" value="check" name="remember" class="custom-control-input"
+                        tabindex="3" id="remember-me"> <label class="custom-control-label"
+                        for="remember-me">ユーザ名を記憶する</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
+                      ログイン</button>
+                  </div>
+				  <!--Googleでログインボタン-->
+				  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+                </form>
+
+              </div>
+            </div>
+            <div class="mt-5 text-muted text-center">admin/test, front/test, test/test,
+              adminfront/test, frontmaster/test, adminmaster/test</div>
+            <div class="insert" th:insert="~{common/front_footer :: front_footer}"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  
+  <!--Googleログイン-->
+  <script>  
+		function onSignIn(googleUser) {
+		var id_token = googleUser.getAuthResponse().id_token;
+		  var xhr = new XMLHttpRequest();
+		  xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+		  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		  xhr.onload = function() {
+		    console.log('Signed in as: ' + xhr.responseText);
+		  };
+		  xhr.send('idtoken=' + id_token);}
+  </script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+</body>
+</html>

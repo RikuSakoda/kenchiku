@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title data-th-text="#{title} + #{title.orders}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/jqvmap/dist/jqvmap.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/summernote/dist/summernote-bs4.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.carousel.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css}">
+</head>
+<style>
+.table {
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.table th, .table td {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+.table th {
+	background-color: #f2f2f2;
+}
+</style>
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>発注一覧</h1>
+          </div>
+
+          <div class="section-body">
+            <!-- <p class="section-lead">
+              We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>.
+            </p> -->
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <a class="" data-toggle="collapse" href="#matter-table" role="button"
+                        aria-expand="false" aria-controls="matter-table">案件情報</a>
+                      <table class="table table-bordered collapse" id="matter-table">
+                        <tbody>
+                          <tr>
+                            <td class="table-active">顧客名</td>
+                            <td><span th:text="${mstCaseForm.customerName}"></span></td>
+                            <td class="table-active">物件名</td>
+                            <td><span th:text="${mstCaseForm.propertyName}"></span></td>
+                            <td class="table-active">種別</td>
+                            <td><span th:text="${mstCaseForm.taskSubstance}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">案件名</td>
+                            <td><span th:text="${mstCaseForm.matterName}"></span></td>
+                            <td class="table-active">訪問日時</td>
+                            <td><span>[[${#temporals.format(mstCaseForm.scheduledVisitDatetime,
+                                'yyyy-MM-dd HH:mm:ss')}]]</span></td>
+                            <td class="table-active">訪問者</td>
+                            <td><span th:text="${mstCaseForm.visitName}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">敷金</td>
+                            <td><span th:text="${mstCaseForm.securityDeposit}"></span></td>
+                            <td class="table-active">賃貸契約日</td>
+                            <td><span>[[${#temporals.format(mstCaseForm.rentalContractDate,
+                                'yyyy-MM-dd HH:mm:ss')}]]</span></td>
+                            <td class="table-active">賃貸契約終了日</td>
+                            <td><span>[[${#temporals.format(mstCaseForm.rentalContractEndDate,
+                                'yyyy-MM-dd HH:mm:ss')}]]</span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者姓</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.lastName}"></span></td>
+                            <td class="table-active">入居者名</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.firstName}"></span></td>
+                            <td class="table-active">入居者姓カナ</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.lastNameKana}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者名カナ</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.firstNameKana}"></span></td>
+                            <td class="table-active">入居者市外局番</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.areaCode}"></span></td>
+                            <td class="table-active">入居者市内局番</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.cityCode}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者電話番号</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.telephoneNumber}"></span></td>
+                            <td class="table-active">入居者転居先郵便番号</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.postCode}"></span></td>
+                            <td class="table-active">入居者転居先都道府県</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.prefectures}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者転居先住所</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.address}"></span></td>
+                            <td class="table-active">入居者転居先建物名</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.buildingName}"></span></td>
+                            <td class="table-active">入居者銀行名</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.bankName}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者銀行支店名</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.bankBranchName}"></span></td>
+                            <td class="table-active">入居者銀行口座番号</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.bankAccountNumber}"></span></td>
+                            <td class="table-active">入居者銀行口座名義</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.bankAccountName}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者銀行口座名義カナ</td>
+                            <td><span
+                              th:text="${mstCaseForm.mstTenantForm.bankAccountNameKana}"></span></td>
+                            <td class="table-active">シリンダー番号</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.cylinderNumber}"></span></td>
+                            <td class="table-active">備考</td>
+                            <td><span th:text="${mstCaseForm.mstTenantForm.note}"></span></td>
+
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- 検索フォームの追加 -->
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button"
+                    id="orderSearchButton" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">発注検索</button>
+                  <div class="dropdown-menu w-100 p-4 rounded border border-dark"
+                    aria-labelledby="orderSearchButton">
+                    <form th:action="@{/accepting-order/order-search}" th:object="${search}" method="get">
+                    <input type="hidden" name="id" th:value="${mstCaseForm.id}">
+                      <div class="form-row">
+                        <div class="form-group col-md-2">
+                          <label for="prefecture">発注ステータス</label> <select class="form-control"
+                            th:field="*{orderStatus}">
+                            <option value=""></option>
+                            <th:block th:each="situation : ${orderSituations}">
+                              <option th:value="${situation.codeName}"><span
+                                  th:text="${situation.codeName}"></span>
+                              </option>
+                            </th:block>
+                          </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label for="supplier">業者・仕入先名</label> <input type="text" class="form-control"
+                            th:field="*{suppliermanagementName}" id="supplier">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label for="dateFrom">工事開始日</label> <input type="date" class="form-control"
+                            th:field="*{cStart}" id="dateFrom">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label for="updateDate">工事終了日</label> <input type="date"
+                            class="form-control" th:field="*{cEnd}" id="updateDate">
+                        </div>
+                        <div class="form-group col-md-2 align-self-end">
+                          <button type="submit" class="btn btn-primary">検索</button>
+                          <button type="reset" class="btn btn-secondary">リセット</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- 検索フォームの追加終了 -->
+                
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table" id="juchu-table">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>発注ステータス</th>
+                            <th>業者・仕入れ先名</th>
+                            <th>工事開始日</th>
+                            <th>工事終了日</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                          <th:block th:each="order : ${acceptionOrder}">
+                            <tr>
+                              <td><a th:href="@{/accepting-order/order-detail(id=${mstCaseForm.id}, orderId=${order.id}, estimateId=${order.estimateId})}"
+                                class="btn btn-primary">詳細</a></td>
+                              <td><span th:text="${order.orderStatus}"></span></td>
+                              <td><span th:text="${order.suppliermanagementName}"></span></td>
+                              <td>[[${#temporals.format(order.conStartDate, 'yyyy-MM-dd
+                                HH:mm:ss')}]]</td>
+                              <td>[[${#temporals.format(order.conEndDate, 'yyyy-MM-dd
+                                HH:mm:ss')}]]</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="section-body">
+                  <a th:href="@{/accepting-order/break-down(id=${mstCaseForm.id})}"
+                    class="btn btn-light btn-lg">前の画面へ戻る</a>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">Copyright &copy; se-project 2024</div>
+        <div class="footer-right">2.3.0</div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="insert" th:insert="~{common/update_end :: update_end}"></div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="@{/assets/js/stisla.js}"></script>
+
+
+
+
+  <script th:inline="javascript">
+			var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+			var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+		</script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+  <script th:src='@{/js/acceptionOrder/acceptionOrder.js}'></script>
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+</body>
+
+</html>

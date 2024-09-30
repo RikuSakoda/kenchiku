@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+<title data-th-text="#{title} + #{title.yoshino}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>
+              ユーザ管理 TODO:権限の登録は未実施<span sec:authorize="hasRole('FRONT')">TODO:FRONT権限のみ表示テスト</span>
+            </h1>
+          </div>
+
+          <div class="section-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <a href="user_yoshino/register" class="btn btn-primary btn-lg btn w-25">新規作成</a>
+                    <a href="user/poi" class="btn btn-primary btn-lg btn w-25">ダウンロード </a>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-striped" id="user-table">
+                        <thead>
+                          <tr>
+                            <th class="text-center"></th>
+                            <th>ステータス</th>
+                            <th>顧客ID</th>
+                            <th>顧客名</th>
+                            <th>顧客名（カナ）</th>                            
+                            <th>部署</th>
+                            <th>名前</th>
+                            <th>電話番号</th>
+                            <th>携帯電話番号</th>
+                            <th>登録日<br />更新日</th>
+                            <th>更新者ID</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                          <th:block th:each="user : ${users}">
+                            <tr>
+                              <td><a th:href="@{/user_yoshino/update(id=${user.id})}" class="btn btn-primary">変更</a></td>
+                              <td>
+                                <div class="form-group mb-0">
+                                  <th:block th:if="${user.status} eq ${statusTrue}">
+                                    <label class="custom-switch mt-2 pl-0">
+                                    <input type="checkbox" name="custom-switch-checkbox" th:attr="data-user-id=${user.id}" class="custom-switch-input" checked>
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">有効</span>
+                                    </label>
+                                  </th:block>
+                                  <th:block th:if="${user.status} ne ${statusTrue}">
+                                    <label class="custom-switch mt-2 pl-0">
+                                    <input type="checkbox" name="custom-switch-checkbox" th:attr="data-user-id=${user.id}" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">無効</span>
+                                    </label>
+                                  </th:block>
+                                </div>
+                              </td>
+                              <td><span th:text="${user.custkind}"></span></td>
+                              <td><span th:text="${user.custcorpname}"></span></td>
+                              <td><span th:text="${user.custcorpnamekana}"></span></td>
+                              <td><span th:text="${user.custdepartmentname}"></span></td>                              
+                              <td><span th:text="${user.custlname} + ${user.custfname}"></span><br /> <span th:text="${user.custlnamekana} + ${user.custfnamekana}"></span></td>
+                              <td><span th:text="${user.custphone}"></span></td>
+                              <td><span th:text="${user.custmobilephone}"></span></td>
+                              <td>
+                                <div>[[${#temporals.format(user.createdat, 'yyyy-MM-dd HH:mm:ss')}]]</div>
+                                <div>[[${#temporals.format(user.updatedat, 'yyyy-MM-dd HH:mm:ss')}]]</div>
+                              </td>
+                              <td><span th:text="${user.updatedmstuserid}"></span></td>
+                            </tr>
+                          </th:block>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <div class="insert" th:insert="~{common/update_end :: update_end}"></div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JavaScript Variables for CSRF -->
+  <script th:inline="javascript">
+    var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+    var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+  </script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <script th:src="@{/js/user/list.js}"></script>
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+  <script th:src="@{/js/user_yoshino/list.js}"></script>
+  
+</body>
+</html>

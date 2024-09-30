@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>見積書/明細書</title>
+    <style>
+        /* A4サイズ、横向きの設定 */
+        @page {
+            size: A4 landscape; /* A4の横向き */
+            margin: 10mm; /* マージンを小さくしました */
+        }
+
+        /* 基本スタイル設定 */
+        body {
+            font-family: "ＭＳ 明朝", serif;
+            font-size: 9pt; /* フォントサイズを小さくしました */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 中央揃え */
+            justify-content: center; /* 縦方向中央揃え */
+        }
+
+        /* PDFボタンのスタイル */
+        .pdf-button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .pdf-button:hover {
+            background-color: #45a049;
+        }
+
+        /* 各コンテナ（御見積書と明細書を囲む） */
+        .container {
+            width: 90%; /* 幅を90%に設定 */
+            max-width: 277mm; /* 最大幅を設定 */
+            height: auto;
+            padding: 10mm; /* パディングを小さくしました */
+            box-sizing: border-box;
+            border: 1px solid black;
+            background-color: white;
+            margin-bottom: 20px;
+            overflow: hidden; /* はみ出しを防ぐ */
+        }
+
+        /* タイトル（御見積書・明細書） */
+        .title {
+            text-align: center;
+            font-size: 18pt; /* タイトルのフォントサイズを小さくしました */
+            margin-bottom: 15px;
+        }
+
+        /* 見積書番号の位置を調整 */
+        .number {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        /* 各セクションの基本マージン設定 */
+        .company-info, .total-amount, .payment-terms, .project-details, .date-issued, .issuer-info {
+            margin-bottom: 8px; /* マージンを小さくしました */
+        }
+
+        /* 金額表示テーブル */
+        .amount-table {
+            margin-top: 8px; /* マージンを小さくしました */
+        }
+
+        /* 金額のテーブルスタイル */
+        .amount-table table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+
+        .amount-table table td {
+            border: 1px solid black;
+            padding: 4px; /* パディングを小さくしました */
+        }
+
+        /* 発行元情報（右寄せ） */
+        .issuer-info {
+            text-align: right;
+        }
+
+        /* 明細書のテーブルスタイル */
+        .details-table {
+            margin-top: 50px; /* マージンを小さくしました */
+        }
+
+        .details-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details-table table, .details-table th, .details-table td {
+            border: 1px solid black;
+            text-align: left;
+            padding: 4px; /* パディングを小さくしました */
+        }
+
+        /* テーブルのヘッダー行のスタイル */
+        .details-table th {
+            background-color: #f0f0f0;
+        }
+
+        /* 明細書の始まりを次のページに強制的に送るための設定 */
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* ページ最終部分に余白を追加 */
+        .spacer {
+            margin: 100px; /* 余白を小さくしました */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PDFボタン -->
+    <button id="pdfButton" class="pdf-button">PDF</button>
+
+    <!-- 御見積書のコンテンツ -->
+    <div id="estimate-content" class="container">
+        <h1 class="title">御見積書</h1>
+
+        <!-- 会社情報 -->
+        <div class="company-info">
+            <p>株式会社XXXXXXX</p>
+            <p>XXXXXXXX 担</p>
+        </div>
+
+        <!-- 御見積金額 -->
+        <div class="total-amount">
+            <p>御見積金額</p>
+            <div class="amount-table">
+                <table>
+                    <tr>
+                        <td>￥</td>
+                        <td>万</td>
+                        <td>千</td>
+                        <td>百</td>
+                        <td>十</td>
+                        <td>円</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 支払条件 -->
+        <div class="payment-terms">御支払条件: XXXXXXX</div>
+
+        <!-- 工事内容 -->
+        <div class="project-details">
+            <p>工事名: XXXXXXX</p>
+            <p>工事場所: XXXXXXX</p>
+            <p>工期: 令和xx年xx月xx日～令和xx年xx月xx日</p>
+        </div>
+
+        <!-- 発行日 -->
+        <div class="date-issued">
+            <p>令和xx年xx月xx日</p>
+        </div>
+
+        <!-- 発行元の情報 -->
+        <div class="issuer-info">
+            <p>株式会社 XXXXXXXX</p>
+            <p>代表取締役 XXXXXXXX</p>
+            <p>TEL: XXXXXXXX</p>
+            <p>FAX: XXXXXXXX</p>
+            <p>E-mail: XXXXX@xx.jp</p>
+        </div>
+    </div>
+
+    <!-- 明細書のコンテンツ -->
+    <div id="details-content" class="container page-break">
+        <h1 class="title">明細書</h1>
+
+        <!-- 明細のテーブル -->
+        <div class="details-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>　</th>
+                        <th>名称</th>
+                        <th>品質・形状</th>
+                        <th>単位</th>
+                        <th>数量</th>
+                        <th>単価</th>
+                        <th>金額</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>　</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>　</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <!-- 追加行 -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>小計</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>¥</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>消費税</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>¥</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>合計</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>¥</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScriptでPDF生成 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+        document.getElementById('pdfButton').addEventListener('click', function() {
+            const element = document.createElement('div');
+            element.appendChild(document.getElementById('estimate-content').cloneNode(true));
+            element.appendChild(document.getElementById('details-content').cloneNode(true));
+
+            const options = {
+                margin: 0.8,
+                filename: '御見積書/明細書.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } // A4サイズ、横向き
+            };
+
+            html2pdf()
+                .from(element)
+                .set(options)
+                .save();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+  <meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Cache-Control" content="no-cache">
+  <title data-th-text="#{title} + #{title.yoshino}"></title>
+
+  <!-- General CSS Files -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <!-- CSS Libraries -->
+  <link rel="stylesheet"
+    th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+  <link rel="stylesheet"
+    th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+ 
+  
+  
+   <!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+
+<style type="text/css">
+            .errorStr {color:red;}
+        </style>
+</head>
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>吉野管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">ユーザ新規登録</h2>
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/user_yoshino/register}" th:object="${mstYoshinoForm}" method="post">
+                  <!-- Transaction Token -->
+                  <div class="card">
+                    <div class="card-body">
+
+                 <!-- Transaction Token -->
+                  <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+                <div class="card">
+                  <div class="card-body">
+                      <div class="form-group">
+                        <h6>
+                          顧客名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                      <select class="form-control w-50" th:field="*{custkind}">
+                         <th:block th:each="cus : ${customer}">
+                         <option th:value="${cus.id}"><span th:text="${cus.corpName}"></span></option>
+                        </th:block> 
+                      </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          顧客名（かな）<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" th:field="*{custcorpnamekana}" class="form-control" th:classappend="${#fields.hasErrors('custcorpnamekana')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custcorpnamekana')}" th:errors="*{custcorpnamekana}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          部署名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" th:field="*{custdepartmentname}" class="form-control" th:classappend="${#fields.hasErrors('custdepartmentname')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custdepartmentname')}" th:errors="*{custdepartmentname}"></small>
+                      </div>
+
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>
+                          姓<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" th:field="*{custlname}" class="form-control" th:classappend="${#fields.hasErrors('custlname')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custlname')}" th:errors="*{custlname}"></small>
+                      </div>
+
+                      <div class="form-group p-1">
+                        <h6>
+                          名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" th:field="*{custfname}" class="form-control w-50" th:classappend="${#fields.hasErrors('custfname')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custfname')}" th:errors="*{custfname}"></small>
+                      </div>
+
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>
+                          姓（かな）<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" th:field="*{custlnamekana}" class="form-control" th:classappend="${#fields.hasErrors('custlnamekana')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custlnamekana')}" th:errors="*{custlnamekana}"></small>
+                      </div>
+
+                      <div class="form-group p-1">
+                        <h6>
+                          名（かな）<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" th:field="*{custfnamekana}" class="form-control w-50" th:classappend="${#fields.hasErrors('custfnamekana')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custfnamekana')}" th:errors="*{custfnamekana}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          電話番号<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="tel" th:field="*{custphone}" class="form-control" th:classappend="${#fields.hasErrors('custphone')} ? 'is-invalid'" aria-describedby="custphoneHelpBlock">
+                        <small id="custphoneHelpBlock" class="form-text text-muted">14文字以内で入力してください</small>
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custphone')}" th:errors="*{custphone}"></small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          携帯電話番号<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="tel" th:field="*{custmobilephone}" class="form-control" th:classappend="${#fields.hasErrors('custmobilephone')} ? 'is-invalid'">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('custmobilephone')}" th:errors="*{custmobilephone}"></small>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a href="/user_yoshino" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                      <button type="submit" class="btn btn-success btn-lg">確認</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <!-- JS Libraries -->
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+  <!-- Page Specific JS File -->
+
+</body>
+</html>

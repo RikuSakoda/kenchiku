@@ -1,0 +1,88 @@
+<div class="card" th:fragment="matter_info(mstMatterForm)">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <a class="" data-toggle="collapse" href="#matter-table" role="button"
+                        aria-expand="false" aria-controls="matter-table">案件情報</a>
+                      <table class="table table-bordered collapse" id="matter-table">
+                        <tbody>
+                          <tr>
+                            <td class="table-active">顧客名</td>
+                            <td><span th:text="${mstMatterForm.customerName}"></span></td>
+                            <td class="table-active">物件名</td>
+                            <td><span th:text="${mstMatterForm.propertyName}"></span></td>
+                            <td class="table-active">種別</td>
+                            <td><span th:text="${mstMatterForm.taskSubstance}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">案件名</td>
+                            <td><span th:text="${mstMatterForm.matterName}"></span></td>
+                            <td class="table-active">訪問日時</td>
+                            <td><span>[[${#temporals.format(mstMatterForm.scheduledVisitDatetime,
+                                'yyyy-MM-dd HH:mm:ss')}]]</span></td>
+                            <td class="table-active">訪問者</td>
+                            <td><span th:text="${mstMatterForm.visitName}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">敷金</td>
+                            <td><span th:text="${mstMatterForm.securityDeposit}"></span></td>
+                            <td class="table-active">賃貸契約日</td>
+                            <td><span>[[${#temporals.format(mstMatterForm.rentalContractDate,
+                                'yyyy-MM-dd HH:mm:ss')}]]</span></td>
+                            <td class="table-active">賃貸契約終了日</td>
+                            <td><span>[[${#temporals.format(mstMatterForm.rentalContractEndDate,
+                                'yyyy-MM-dd HH:mm:ss')}]]</span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者姓</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.lastName}"></span></td>
+                            <td class="table-active">入居者名</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.firstName}"></span></td>
+                            <td class="table-active">入居者姓カナ</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.lastNameKana}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者名カナ</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.firstNameKana}"></span></td>
+                            <td class="table-active">入居者市外局番</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.areaCode}"></span></td>
+                            <td class="table-active">入居者市内局番</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.cityCode}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者電話番号</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.telephoneNumber}"></span></td>
+                            <td class="table-active">入居者転居先郵便番号</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.postCode}"></span></td>
+                            <td class="table-active">入居者転居先都道府県</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.prefectures}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者転居先住所</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.address}"></span></td>
+                            <td class="table-active">入居者転居先建物名</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.buildingName}"></span></td>
+                            <td class="table-active">入居者銀行名</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.bankName}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者銀行支店名</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.bankBranchName}"></span></td>
+                            <td class="table-active">入居者銀行口座番号</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.bankAccountNumber}"></span></td>
+                            <td class="table-active">入居者銀行口座名義</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.bankAccountName}"></span></td>
+                          </tr>
+                          <tr>
+                            <td class="table-active">入居者銀行口座名義カナ</td>
+                            <td><span
+                              th:text="${mstMatterForm.mstTenantForm.bankAccountNameKana}"></span></td>
+                            <td class="table-active">シリンダー番号</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.cylinderNumber}"></span></td>
+                            <td class="table-active">備考</td>
+                            <td><span th:text="${mstMatterForm.mstTenantForm.note}"></span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                   </div>
+                   </div>

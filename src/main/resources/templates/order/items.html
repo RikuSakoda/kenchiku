@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<title data-th-text="#{title} + #{title.}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+  th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+<!-- CSS Libraries -->
+<link rel="stylesheet" th:href="@{/node_modules/jqvmap/dist/jqvmap.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/summernote/dist/summernote-bs4.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.carousel.min.css}">
+<link rel="stylesheet" th:href="@{/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css}">
+
+<!-- Template CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}">
+<link rel="stylesheet" th:href="@{/assets/css/components.css}">
+
+<!-- Bootstrap Icons CSS -->
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>発注管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title  mb-1">発注内訳</h2>
+          </div>
+         
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <a class="" data-toggle="collapse" href="#collapse-table" role="button"
+                      aria-expand="false" aria-controls="collapse-table">案件情報</a>
+                    <table class="table table-bordered collapse" id="collapse-table">
+                      <tbody id="tbody">
+                        <th:block th:each="case : ${case}">
+                         <th:block th:if="${case.id} eq ${caseId}">
+                        <tr>
+                          <td class="table-active">顧客名</td>
+                          <td class=""><span th:text="${case.customerName}"></span></td>
+                          <td class="table-active">案件名</td>
+                          <td class=""><span th:text="${case.caseName}"></span></td>
+                          <td class="table-active">種別</td>
+                          <td class=""><span th:text="${case.caseKind}"></span></td>
+                        </tr>
+                        <tr>
+                          <td class="table-active">状況ステータス</td>
+                          <td class=""><span th:text="${case.caseSituationStatus}"></span></td>
+                          <td class="table-active">訪問日時</td>
+                          <td class=""><span th:text="${case.caseVisitDate}"></span>0</td>
+                          <td class="table-active">物件名</td>
+                          <td class=""><span th:text="${case.floorName}"></span></td>
+                        </tr>
+                        <tr>
+                          <td class="table-active">郵便番号</td>
+                          <td class=""><span th:text="${case.caseTenantZip}"></span></td>
+                          <td class="table-active">住所</td>
+                          <td class=""><span th:text="${case.caseTenantAddress}"></span></td>
+                          <td class="table-active">建物名</td>
+                          <td class=""><span th:text="${case.caseTenantBuilding}"></span></td>
+                        </tr>
+                        <tr>
+                          <td class="table-active">入居者名</td>
+                          <td class=""><span th:text="${case.caseTenantName}"></span></td>
+                          <td class="table-active">入居者カナ</td>
+                          <td class=""><span th:text="${case.caseTenantNameKana}"></span></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        </th:block>
+                        <th:block>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card">
+                    <div class="card-body">
+                      <div class="table table-borderless pt-3 pl-4">
+                        <form method="post" action="#">
+                          <table class="table table-borderless">
+                            <tbody id="tbody">
+                              <tr>
+                                <td class="w-25">業者仕入先名：<span th:text="${supplierName}"></span></td>
+                                <td>
+                                  <select
+                                    class="form-control form-control-lg w-25"
+                                  >
+                                    <option>未完了</option>
+                                    <option>完了</option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>工事期間を入力してください</td>
+                                <td>
+                                  <input
+                                    type="date"
+                                    class="form-control w-25 float-left"
+                                    id="koji_kikan_start"
+                                  />
+                                  <span class="float-left ml-2 mt-3 mr-2"
+                                    >～</span
+                                  >
+                                  <input
+                                    type="date"
+                                    class="form-control w-25"
+                                    id="koji_kikan_end"
+                                  />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2">
+                                  <div class="section-body mt-3">
+                                    <div class="buttons">
+                                      <a
+                                        href="#"
+                                        class="btn btn-light btn-lg"
+                                        >前の画面へ戻る</a
+                                      >
+                                      <button
+                                        type="submit"
+                                        class="btn btn-success btn-lg"
+                                      >
+                                        更新
+                                      </button>
+                                      <button
+                                        type="button"
+                                        class="btn btn-warning btn-lg"
+                                      >
+                                        チェックが付いた内容で発注書作成
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </form>
+                      </div>
+                      
+                   <div class="table-responsive">
+                        <table class="table table-bordered" id="order-table">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>内容</th>
+                              <th>メーカー名</th>
+                              <th>型番</th>
+                              <th>単位</th>
+                              <th>単価</th>
+                              <th>数量</th>
+                              <th>小計</th>
+                              <th>備考</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody">
+                            <tr>
+                              <td>
+                                <div class="form-group mt-2">
+                                  <label><input type="checkbox" /></label>
+                                </div>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td class="pl-1 pr-1">
+                                <select class="form-control form-control">
+                                  <option>㎡</option>
+                                  <option>個</option>
+                                  <option>式</option>
+                                </select>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <textarea class="form-control"></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <div class="form-group mt-2">
+                                  <label><input type="checkbox" /></label>
+                                </div>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td class="pl-1 pr-1">
+                                <select class="form-control form-control">
+                                  <option>㎡</option>
+                                  <option>個</option>
+                                  <option>式</option>
+                                </select>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" />
+                              </td>
+                              <td>
+                                <textarea class="form-control"></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="6" rowspan="3">
+                                ■鍵所在
+                                <textarea
+                                  class="form-control"
+                                  style="min-height: 120px"
+                                ></textarea>
+                              </td>
+                              <td>小計</td>
+                              <td>円</td>
+                              <td colspan="3"></td>
+                            </tr>
+                            <tr>
+                              <td>消費税</td>
+                              <td>円</td>
+                            </tr>
+                            <tr>
+                              <td>合計</td>
+                              <td>円</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+  <div class="insert" th:insert="~{common/update_end :: update_end}"></div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraies -->
+  <script th:src="@{/assets/js/admin/jquery.dataTables.custom.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js}"></script>
+  <script th:src="@{/node_modules/jquery-ui-dist/jquery-ui.min.js}"></script>
+
+  <!-- Template JS File -->
+  <script th:src="@{/assets/js/scripts.js}"></script>
+  <script th:src="@{/assets/js/custom.js}"></script>
+
+
+  <script th:inline="javascript">
+			var csrfToken = /*[[${csrfToken}]]*/'csrfToken';
+			var csrfHeader = /*[[${csrfHeaderName}]]*/'csrfHeader';
+		</script>
+
+
+  <!-- Page Specific JS File -->
+  <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <script th:src="@{/js/case/case.js}"></script>
+
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+
+
+
+</body>
+</html>

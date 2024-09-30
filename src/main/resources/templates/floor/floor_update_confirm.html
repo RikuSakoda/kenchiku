@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Cache-Control" content="no-cache">
+<title data-th-text="#{title} + #{title. property}+#{title.update}"></title>
+
+  <!-- General CSS Files -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <!-- CSS Libraries -->
+  <link rel="stylesheet"
+   th:href="@{/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css}">
+  <link rel="stylesheet"
+   th:href="@{/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css}">
+  
+  <!-- Template CSS -->
+  <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+  <link rel="stylesheet" th:href="@{/assets/css/components.css}">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>物件管理</h1>
+          </div>          
+          <div class="section-body">
+            <h2 class="section-title mb-5">物件変更　確認</h2>
+            <p class="section-lead">
+              この情報で変更します。よろしいですか？
+            </p>
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form method="post" th:object="${mstFloorManagementForm}" th:action="@{/floor-management/save-update}">
+                <div class="card">
+                  <div class="card-body">
+                  
+                      <div class="form-group">
+                        <h6>顧客名<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstFloorManagementForm.customerName}"></span></h5> 
+                        <input type="hidden" th:field="*{customerName}" th:value="${mstFloorManagementForm.customerName}">
+                        <input type="hidden" th:field="*{customerId}" th:value="${mstFloorManagementForm.customerId}">
+                      </div>
+                      
+                     <div class="form-group">
+                        <h6>オーナー名<span class="badge badge-danger ml-1 mt-0">必須</span></h6>
+                        <h5><span th:text="${mstFloorManagementForm.ownerName}"></span></h5> 
+                        <input type="hidden" th:field="*{ownerName}" th:value="${mstFloorManagementForm.ownerName}">
+                        <input type="hidden" th:field="*{ownerId}" th:value="${mstFloorManagementForm.ownerId}">
+                      </div>          
+                               
+                      <div class="form-group p-1">
+                        <h6>物件名</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.floorName}" readonly>
+                      <input type="hidden" th:field="*{floorName}" th:value="${mstFloorManagementForm.floorName}">
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>間取り</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.arrangement}" readonly>
+                      <input type="hidden" th:field="*{arrangement}" th:value="${mstFloorManagementForm.arrangement}">
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>家賃</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.rent}" readonly>
+                      <input type="hidden" th:field="*{rent}" th:value="${mstFloorManagementForm.rent}">
+                      </div>
+                      
+                      <div class="form-group p-1">
+                        <h6>敷金</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.securityDeposit}" readonly>
+                      <input type="hidden" th:field="*{securityDeposit}" th:value="${mstFloorManagementForm.securityDeposit}">
+                      </div>
+
+                      <div class="form-group p-1">
+                        <h6>郵便番号</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.postCode}" readonly>
+                      <input type="hidden" th:field="*{postCode}" th:value="${mstFloorManagementForm.postCode}">
+                      </div>
+
+                      <div class="form-group">
+                      <h6>都道府県<span class="badge badge badge-danger ml-1 mt-0">必須</span></h6>
+                      <h5><span th:text="${mstFloorManagementForm.prefectures}"></span></h5> 
+                        <input type="hidden" th:field="*{prefectures}" th:value="${mstFloorManagementForm.prefectures}">
+                    </div>
+
+                      <div class="form-group p-1">
+                        <h6>住所</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.address}" readonly>
+                      <input type="hidden" th:field="*{address}" th:value="${mstFloorManagementForm.address}">
+                      </div>
+
+                      <div class="form-group p-1">
+                        <h6>建物名</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.buildingName}" readonly>
+                      <input type="hidden" th:field="*{buildingName}" th:value="${mstFloorManagementForm.buildingName}">
+                      </div>
+
+                      <div class="form-group">
+                        <h6>電話番号</h6> <input type="tel" class="form-control"
+                          th:value="${mstFloorManagementForm.phone}" readonly>
+                        <input type="hidden" th:field="*{phone}" th:value="${mstFloorManagementForm.phone}">
+                      </div>
+                      
+                      <div class="form-group">
+                        <h6>携帯番号</h6> <input type="tel" class="form-control"
+                          th:value="${mstFloorManagementForm.mobilePhone}" readonly>
+                      <input type="hidden" th:field="*{mobilePhone}" th:value="${mstFloorManagementForm.mobilePhone}">
+                          
+                      </div>
+
+                      <div class="form-group p-1">
+                        <h6>坪数</h6> <input type="text" class="form-control"
+                          th:value="${mstFloorManagementForm.area}" readonly>
+                      <input type="hidden" th:field="*{area}" th:value="${mstFloorManagementForm.area}">
+                      </div>
+
+                      
+                    <input type="hidden" th:field="*{transactionToken}" th:value="${mstFloorManagementForm.transactionToken}">
+                    <input type="hidden" th:field="*{status}" th:value="${mstFloorManagementForm.status}">                    
+                    <input type="hidden" th:field="*{id}" th:value="${mstFloorManagementForm.id}" />
+                     <input type="hidden" th:field="*{createdAt}" th:value="${mstFloorManagementForm.createdAt}">
+                
+                    
+                    
+                </div>
+                </div>
+                <div class="section-body">
+                  <div class="buttons">
+                    <a th:href="@{/floor-management/update(id=${mstFloorManagementForm.id})}"
+                                class="btn btn-primary">前の画面へ戻る</a>
+                    <button type="submit" class="btn btn-success btn-lg">変更</button>
+                  </div>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+       <div class="insert" th:insert="~{common/footer :: footer}"></div>
+    </div>
+  </div>
+  
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="@{/assets/js/stisla.js}"></script>
+
+  <!-- JS Libraies -->
+ 
+  <!-- Template JS File -->
+ <script th:src="@{/assets/js/scripts.js}"></script> 
+   <script th:src="@{/assets/js/custom.js}"></script> 
+
+  <!-- Page Specific JS File -->
+   <script th:src="@{/assets/js/page/modules-datatables.js}"></script>
+  <script th:src="@{/assets/js/admin/sep.dataTables.common.js}"></script>
+  
+</body>
+</html>
